@@ -24,12 +24,30 @@ export function VisualizerScene({ data, isMobile = false }: VisualizerSceneProps
       className="w-full h-full"
       dpr={isMobile ? 1 : [1, 2]}
       performance={{ min: isMobile ? 0.3 : 0.5 }}
+      style={{
+        background: 'linear-gradient(180deg, #0a0a1a 0%, #000000 50%, #1a0a0a 100%)'
+      }}
     >
-      {/* Lighting */}
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={1} />
-      <pointLight position={[-10, -10, -10]} intensity={0.5} />
-      <pointLight position={[0, 20, 0]} intensity={0.7} />
+      {/* Enhanced Lighting Setup */}
+      {/* Key light (main illumination) */}
+      <directionalLight position={[50, 50, 50]} intensity={1.5} color="#ffffff" />
+
+      {/* Fill light (softens shadows) */}
+      <pointLight position={[-30, 20, 30]} intensity={1} color="#4080ff" />
+
+      {/* Back/rim light (creates edge glow) */}
+      <pointLight position={[0, -20, -50]} intensity={0.8} color="#ff8040" />
+
+      {/* Ambient (base illumination) */}
+      <ambientLight intensity={0.3} color="#202040" />
+
+      {/* Hemisphere light (sky/ground gradient) */}
+      <hemisphereLight
+        args={['#1a1a2e', '#0f0f1e', 0.5]}
+      />
+
+      {/* Fog for atmospheric depth */}
+      <fog attach="fog" args={['#000000', 50, 200]} />
 
       {/* Background stars (for space effect) - disabled on mobile */}
       {!isMobile && (
