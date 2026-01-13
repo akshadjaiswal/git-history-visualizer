@@ -9,6 +9,8 @@ import { TimelineScrubber } from '@/components/visualizer/timeline-scrubber'
 import { CommitDetailsPanel } from '@/components/visualizer/commit-details-panel'
 import { FilterPanel } from '@/components/visualizer/filter-panel'
 import { ExportModal } from '@/components/visualizer/export-modal'
+import { KeyboardControls } from '@/components/visualizer/keyboard-controls'
+import { ErrorBoundary } from '@/components/error-boundary'
 import { exportSceneToPNG, exportSceneToSVG } from '@/lib/export-scene'
 
 function VisualizerContent() {
@@ -148,8 +150,19 @@ function VisualizerContent() {
 
   if (!data) return null
 
+  const handleExport = (format: 'png' | 'svg', resolution: number) => {
+    if (format === 'png') {
+      exportSceneToPNG(resolution)
+    } else {
+      exportSceneToSVG()
+    }
+  }
+
   return (
     <div className="relative w-full h-screen bg-black overflow-hidden">
+      {/* Keyboard Controls */}
+      <KeyboardControls />
+
       {/* 3D Scene (fills entire viewport) */}
       <VisualizerScene data={data} isMobile={isMobile} />
 
@@ -158,18 +171,21 @@ function VisualizerContent() {
       <TimelineScrubber timeRange={data.timeRange} commits={data.commits} />
       <CommitDetailsPanel />
       <FilterPanel contributors={Array.from(data.contributors.entries())} />
+      <ExportModal onExport={handleExport} />
     </div>
   )
 }
 
 export default function VisualizePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="font-display text-2xl">Loading...</p>
-      </div>
-    }>
-      <VisualizerContent />
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <p className="font-display text-2xl">Loading...</p>
+        </div>
+      }>
+        <VisualizerContent />
+      </Suspense>
+    </ErrorBoundary>
   )
 }
