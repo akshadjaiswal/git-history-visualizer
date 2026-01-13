@@ -20,6 +20,11 @@ export function CommitNodes({ commits, isMobile = false }: CommitNodesProps) {
   const filteredCommits = useMemo(() => {
     let result = getFilteredCommits(commits)
 
+    // Debug logging
+    console.log('[CommitNodes] Total commits:', commits.length)
+    console.log('[CommitNodes] After filtering:', result.length)
+    console.log('[CommitNodes] Filter state:', useVisualizerStore.getState().filteredContributors)
+
     // Further reduce for mobile (show every 3rd commit)
     if (isMobile && result.length > 2500) {
       result = result.filter((_, index) => index % 3 === 0)

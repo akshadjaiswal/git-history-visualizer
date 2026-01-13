@@ -41,7 +41,7 @@ export function FilterPanel({ contributors }: FilterPanelProps) {
                 onClick={clearContributorFilter}
                 className="text-xs font-body underline hover:no-underline"
               >
-                Clear all
+                Show all
               </button>
             )}
           </div>
@@ -53,7 +53,8 @@ export function FilterPanel({ contributors }: FilterPanelProps) {
             </h3>
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {contributors.map(([email, id]) => {
-                const isChecked = filteredContributors.size === 0 || filteredContributors.has(id)
+                // Checkbox checked = contributor is VISIBLE (not in the hide-set)
+                const isChecked = !filteredContributors.has(id)
 
                 return (
                   <label key={id} className="flex items-center gap-2 cursor-pointer group">

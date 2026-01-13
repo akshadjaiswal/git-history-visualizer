@@ -7,7 +7,7 @@ interface VisualizerStore {
   setSelectedCommit: (commit: CommitNode | null) => void
 
   // Filter state
-  filteredContributors: Set<number> // Contributor IDs to show (empty = show all)
+  filteredContributors: Set<number> // Contributor IDs to HIDE (empty = show all)
   toggleContributor: (id: number) => void
   clearContributorFilter: () => void
 
@@ -79,8 +79,8 @@ export const useVisualizerStore = create<VisualizerStore>((set, get) => ({
     const cutoffTime = minTime + (totalTime * timelinePosition)
 
     return commits.filter(commit => {
-      // Filter by contributor
-      if (filteredContributors.size > 0 && !filteredContributors.has(commit.contributorId)) {
+      // Filter by contributor (Set contains IDs to HIDE)
+      if (filteredContributors.has(commit.contributorId)) {
         return false
       }
 
