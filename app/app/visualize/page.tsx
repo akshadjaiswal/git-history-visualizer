@@ -8,6 +8,8 @@ import { TopBar } from '@/components/visualizer/top-bar'
 import { TimelineScrubber } from '@/components/visualizer/timeline-scrubber'
 import { CommitDetailsPanel } from '@/components/visualizer/commit-details-panel'
 import { FilterPanel } from '@/components/visualizer/filter-panel'
+import { ExportModal } from '@/components/visualizer/export-modal'
+import { exportSceneToPNG, exportSceneToSVG } from '@/lib/export-scene'
 
 function VisualizerContent() {
   const searchParams = useSearchParams()
