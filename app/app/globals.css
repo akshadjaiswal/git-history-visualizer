@@ -1,3 +1,168 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    /* Color System - Minimalist Monochrome */
+    --color-black: 0 0% 0%;        /* #000000 */
+    --color-white: 0 0% 100%;      /* #FFFFFF */
+    --color-gray-100: 0 0% 96%;    /* #F5F5F5 */
+    --color-gray-200: 0 0% 90%;    /* #E5E5E5 */
+    --color-gray-300: 0 0% 75%;    /* #BFBFBF */
+    --color-gray-400: 0 0% 32%;    /* #525252 - muted foreground */
+    --color-gray-500: 0 0% 50%;    /* #808080 */
+    --color-gray-600: 0 0% 40%;    /* #666666 */
+    --color-gray-700: 0 0% 25%;    /* #404040 */
+    --color-gray-800: 0 0% 15%;    /* #262626 */
+    --color-gray-900: 0 0% 8%;     /* #141414 */
+
+    /* Typography */
+    --font-display: var(--font-display);
+    --font-body: var(--font-body);
+    --font-mono: var(--font-mono);
+
+    /* Spacing - Consistent scale */
+    --spacing-xs: 0.5rem;   /* 8px */
+    --spacing-sm: 1rem;     /* 16px */
+    --spacing-md: 1.5rem;   /* 24px */
+    --spacing-lg: 2rem;     /* 32px */
+    --spacing-xl: 3rem;     /* 48px */
+    --spacing-2xl: 4rem;    /* 64px */
+    --spacing-3xl: 6rem;    /* 96px */
+
+    /* Borders */
+    --border-thin: 1px;
+    --border-normal: 2px;
+    --border-thick: 4px;
+    --border-extra-thick: 8px;
+
+    /* Focus States */
+    --focus-outline-width: 3px;
+    --focus-outline-offset: 3px;
+
+    /* Transitions */
+    --transition-instant: 0ms;
+    --transition-fast: 100ms;
+    --transition-normal: 200ms;
+    --transition-smooth: 300ms;
+  }
+
+  /* CRITICAL: No rounded corners anywhere */
+  * {
+    border-radius: 0 !important;
+  }
+
+  body {
+    font-family: var(--font-body), Georgia, serif;
+    color: hsl(var(--color-black));
+    background-color: hsl(var(--color-white));
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display), Georgia, serif;
+    line-height: 1.2;
+    font-weight: 600;
+  }
+
+  code, pre, kbd, samp {
+    font-family: var(--font-mono), monospace;
+  }
+
+  /* Focus States for Accessibility */
+  *:focus-visible {
+    outline: var(--focus-outline-width) solid hsl(var(--color-black));
+    outline-offset: var(--focus-outline-offset);
+  }
+
+  /* Ensure inputs and buttons have proper focus */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: var(--focus-outline-width) solid hsl(var(--color-black));
+    outline-offset: var(--focus-outline-offset);
+  }
+}
+
+/* Background Textures */
+@layer utilities {
+  .bg-texture-lines {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(var(--color-gray-100)) 2px,
+      hsl(var(--color-gray-100)) 4px
+    );
+  }
+
+  .bg-texture-grid {
+    background-image:
+      repeating-linear-gradient(0deg, hsl(var(--color-gray-200)) 0 1px, transparent 1px 100%),
+      repeating-linear-gradient(90deg, hsl(var(--color-gray-200)) 0 1px, transparent 1px 100%);
+    background-size: 40px 40px;
+  }
+
+  .bg-texture-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+  }
+
+  /* Color Inversion Utility */
+  .invert-colors {
+    background-color: hsl(var(--color-black));
+    color: hsl(var(--color-white));
+  }
+
+  .invert-colors-hover {
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .invert-colors-hover:hover {
+    background-color: hsl(var(--color-black));
+    color: hsl(var(--color-white));
+  }
+
+  /* Grayscale filter utilities */
+  .grayscale {
+    filter: grayscale(100%);
+  }
+
+  .grayscale-hover {
+    filter: grayscale(100%);
+    transition: filter var(--transition-smooth);
+  }
+
+  .grayscale-hover:hover {
+    filter: grayscale(0%);
+  }
+}
+
+/* Custom Scrollbar (Monochrome) */
+@layer base {
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--color-gray-100));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--color-gray-400));
+    border: 2px solid hsl(var(--color-gray-100));
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--color-black));
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--color-gray-400)) hsl(var(--color-gray-100));
+  }
+}
