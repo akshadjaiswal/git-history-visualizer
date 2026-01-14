@@ -1,4 +1,4 @@
-import type { GitHubCommit, GitHubBranch, GitHubContributor, CommitNode, BranchLine, VisualizationData } from '@/types/github'
+import type { GitHubCommit, GitHubBranch, GitHubContributor, GitHubRepo, CommitNode, BranchLine, VisualizationData } from '@/types/github'
 
 /**
  * Process GitHub API data into 3D visualization data
@@ -10,17 +10,15 @@ import type { GitHubCommit, GitHubBranch, GitHubContributor, CommitNode, BranchL
 export function processGitData(
   commits: GitHubCommit[],
   branches: GitHubBranch[],
-  contributors: GitHubContributor[]
+  contributors: GitHubContributor[],
+  repoMetadata: GitHubRepo
 ): VisualizationData {
   // 1. Create contributor map (email -> ID)
+  // Use commit author emails as the source of truth since GitHub API
+  // contributors don't reliably return email addresses
   const contributorMap = new Map<string, number>()
-  contributors.forEach((contributor, index) => {
-    // Use login as fallback identifier
-    const email = contributor.email || `${contributor.login}@github.com`
-    contributorMap.set(email, index)
-  })
 
-  // Also map contributors found in commits
+  // Build map from actual commit authors
   commits.forEach(commit => {
     if (!contributorMap.has(commit.author.email)) {
       contributorMap.set(commit.author.email, contributorMap.size)
@@ -47,6 +45,7 @@ export function processGitData(
         totalContributors: 0,
         totalBranches: 0,
       },
+      repoMetadata,
     }
   }
 
@@ -141,6 +140,7 @@ export function processGitData(
       totalContributors: contributorMap.size,
       totalBranches: branches.length,
     },
+    repoMetadata,
   }
 }
 

@@ -48,12 +48,22 @@ export function useGitHubVisualization(
       const commitLimit = maxCommits || (isMobile ? 2500 : 10000)
 
       try {
-        // Stage 1: Fetch commits with progress
+        // Stage 0: Fetch repository metadata
         setProgress({
           stage: 'fetching_commits',
           current: 0,
           total: commitLimit,
           percentage: 0,
+        })
+
+        const repoMetadata = await client.getRepo(owner, repo)
+
+        // Stage 1: Fetch commits with progress
+        setProgress({
+          stage: 'fetching_commits',
+          current: 0,
+          total: commitLimit,
+          percentage: 5,
         })
 
         const commits = await client.getAllCommits(
@@ -65,7 +75,7 @@ export function useGitHubVisualization(
               stage: 'fetching_commits',
               current: commitProgress.current,
               total: commitProgress.total,
-              percentage: commitProgress.percentage * 0.6, // 60% of total progress
+              percentage: 5 + (commitProgress.percentage * 0.55), // 5-60% of total progress
             })
           },
           commitLimit
@@ -113,7 +123,7 @@ export function useGitHubVisualization(
           percentage: 80,
         })
 
-        const visualizationData = processGitData(commits, branches, contributors)
+        const visualizationData = processGitData(commits, branches, contributors, repoMetadata)
 
         setProgress({
           stage: 'processing_data',
@@ -130,6 +140,7 @@ export function useGitHubVisualization(
           percentage: 95,
         })
 
+        // Return visualization data (already includes repoMetadata)
         return visualizationData
       } catch (error) {
         console.error('Error fetching visualization data:', error)

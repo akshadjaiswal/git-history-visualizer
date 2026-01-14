@@ -43,9 +43,9 @@ export function BranchLines({ branches, commits, isMobile = false }: BranchLines
           <Line
             key={branch.name}
             points={branch.points}
-            color="#666666"
-            lineWidth={isMobile ? 0.5 : 1}
-            opacity={isMobile ? 0.2 : 0.4}
+            color={branch.color}  // Use calculated branch color instead of gray
+            lineWidth={isMobile ? 1.5 : 2.5}  // Thicker for visibility
+            opacity={isMobile ? 0.5 : 0.7}  // More opaque
             transparent
             dashed={false}
           />

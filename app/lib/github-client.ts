@@ -26,6 +26,14 @@ export class GitHubClient {
         defaultBranch: data.default_branch,
         createdAt: data.created_at,
         updatedAt: data.updated_at,
+        // Additional metadata for dashboard
+        language: data.language,
+        topics: data.topics || [],
+        size: data.size,
+        openIssues: data.open_issues_count,
+        watchers: data.watchers_count,
+        license: data.license?.name || null,
+        isArchived: data.archived,
       }
     } catch (error: any) {
       if (error.status === 404) {

@@ -3,15 +3,14 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useGitHubVisualization } from '@/lib/use-github-data'
-import { VisualizerScene } from '@/components/visualizer/visualizer-scene'
 import { TopBar } from '@/components/visualizer/top-bar'
-import { TimelineScrubber } from '@/components/visualizer/timeline-scrubber'
-import { CommitDetailsPanel } from '@/components/visualizer/commit-details-panel'
-import { FilterPanel } from '@/components/visualizer/filter-panel'
-import { ExportModal } from '@/components/visualizer/export-modal'
-import { KeyboardControls } from '@/components/visualizer/keyboard-controls'
+import { StatsCard } from '@/components/visualizer/stats-card'
+import { ContributorConstellation } from '@/components/visualizer/contributor-constellation'
+import { ActivityHeatmap } from '@/components/visualizer/activity-heatmap'
+import { CommitFlow } from '@/components/visualizer/commit-flow'
+import { TimelineMilestones } from '@/components/visualizer/timeline-milestones'
+import { BranchOverview } from '@/components/visualizer/branch-overview'
 import { ErrorBoundary } from '@/components/error-boundary'
-import { exportSceneToPNG, exportSceneToSVG } from '@/lib/export-scene'
 
 function VisualizerContent() {
   const searchParams = useSearchParams()
@@ -150,28 +149,42 @@ function VisualizerContent() {
 
   if (!data) return null
 
-  const handleExport = (format: 'png' | 'svg', resolution: number) => {
-    if (format === 'png') {
-      exportSceneToPNG(resolution)
-    } else {
-      exportSceneToSVG()
-    }
-  }
-
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden">
-      {/* Keyboard Controls */}
-      <KeyboardControls />
-
-      {/* 3D Scene (fills entire viewport) */}
-      <VisualizerScene data={data} isMobile={isMobile} />
-
-      {/* UI Overlays (fixed positioning) */}
+    <div className="min-h-screen bg-black text-white pt-20">
+      {/* Top Bar */}
       <TopBar owner={owner} repo={repo} />
-      <TimelineScrubber timeRange={data.timeRange} commits={data.commits} />
-      <CommitDetailsPanel />
-      <FilterPanel contributors={Array.from(data.contributors.entries())} />
-      <ExportModal onExport={handleExport} />
+
+      {/* Dashboard Grid - Flexible rows */}
+      <div className="p-4 space-y-4">
+        {/* Row 1: Top panels */}
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-3">
+            <StatsCard data={data.repoMetadata} contributors={data.contributors.size} />
+          </div>
+          <div className="col-span-6">
+            <CommitFlow commits={data.commits} />
+          </div>
+          <div className="col-span-3">
+            <ContributorConstellation
+              contributors={Array.from(data.contributors.entries())}
+              commits={data.commits}
+            />
+          </div>
+        </div>
+
+        {/* Row 2: Bottom panels */}
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-3">
+            <TimelineMilestones commits={data.commits} timeRange={data.timeRange} />
+          </div>
+          <div className="col-span-6">
+            <ActivityHeatmap commits={data.commits} timeRange={data.timeRange} />
+          </div>
+          <div className="col-span-3">
+            <BranchOverview branches={data.branches} commits={data.commits} />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
