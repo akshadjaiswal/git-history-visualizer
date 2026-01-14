@@ -8,6 +8,14 @@ export interface GitHubRepo {
   defaultBranch: string
   createdAt: string
   updatedAt: string
+  // Additional metadata for dashboard
+  language: string | null
+  topics: string[]
+  size: number
+  openIssues: number
+  watchers: number
+  license: string | null
+  isArchived: boolean
 }
 
 export interface GitHubCommit {
@@ -83,6 +91,7 @@ export interface VisualizationData {
     totalContributors: number
     totalBranches: number
   }
+  repoMetadata: GitHubRepo
 }
 
 // Progress tracking for data fetching

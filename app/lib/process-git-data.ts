@@ -1,4 +1,4 @@
-import type { GitHubCommit, GitHubBranch, GitHubContributor, CommitNode, BranchLine, VisualizationData } from '@/types/github'
+import type { GitHubCommit, GitHubBranch, GitHubContributor, GitHubRepo, CommitNode, BranchLine, VisualizationData } from '@/types/github'
 
 /**
  * Process GitHub API data into 3D visualization data
@@ -10,7 +10,8 @@ import type { GitHubCommit, GitHubBranch, GitHubContributor, CommitNode, BranchL
 export function processGitData(
   commits: GitHubCommit[],
   branches: GitHubBranch[],
-  contributors: GitHubContributor[]
+  contributors: GitHubContributor[],
+  repoMetadata: GitHubRepo
 ): VisualizationData {
   // 1. Create contributor map (email -> ID)
   // Use commit author emails as the source of truth since GitHub API
@@ -44,6 +45,7 @@ export function processGitData(
         totalContributors: 0,
         totalBranches: 0,
       },
+      repoMetadata,
     }
   }
 
@@ -138,6 +140,7 @@ export function processGitData(
       totalContributors: contributorMap.size,
       totalBranches: branches.length,
     },
+    repoMetadata,
   }
 }
 
