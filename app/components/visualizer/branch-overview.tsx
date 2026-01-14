@@ -33,7 +33,7 @@ export function BranchOverview({ branches, commits }: BranchOverviewProps) {
   }, [branches, commits])
 
   return (
-    <div className="h-auto min-h-[280px] border-2 border-white bg-black p-4 overflow-auto">
+    <div className="h-auto min-h-[280px] max-h-[350px] border-2 border-white bg-black p-4 overflow-y-auto">
       <h2 className="font-display text-xl font-bold mb-4 border-b-2 border-white pb-2">
         Branches
       </h2>

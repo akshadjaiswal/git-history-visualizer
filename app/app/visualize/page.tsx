@@ -150,7 +150,7 @@ function VisualizerContent() {
   if (!data) return null
 
   return (
-    <div className="min-h-screen bg-black text-white pt-20">
+    <div className="min-h-screen bg-black text-white pt-16">
       {/* Top Bar */}
       <TopBar owner={owner} repo={repo} />
 

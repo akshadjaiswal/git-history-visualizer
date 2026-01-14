@@ -41,7 +41,7 @@ export function StatsCard({ data, contributors }: StatsCardProps) {
 
         {/* Language Badge */}
         {data.language && (
-          <div className="mt-6 pt-4 border-t border-white">
+          <div className="mt-4 pt-3 border-t border-white">
             <div className="px-3 py-1 inline-block font-mono text-sm font-semibold text-black" style={{ background: 'linear-gradient(135deg, #6EE7B7 0%, #7DD3FC 100%)' }}>
               {data.language}
             </div>
