@@ -155,7 +155,7 @@ function VisualizerContent() {
       <TopBar owner={owner} repo={repo} />
 
       {/* Dashboard Grid */}
-      <div className="h-[calc(100vh-80px)] grid grid-cols-12 grid-rows-12 gap-4 p-4">
+      <div className="min-h-[calc(100vh-64px)] mt-16 grid grid-cols-12 grid-rows-12 gap-3 p-3">
         {/* Top Left - Stats Card */}
         <div className="col-span-3 row-span-4">
           <StatsCard data={data.repoMetadata} contributors={data.contributors.size} />

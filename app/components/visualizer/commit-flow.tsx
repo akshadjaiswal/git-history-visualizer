@@ -8,14 +8,14 @@ interface CommitFlowProps {
 }
 
 export function CommitFlow({ commits }: CommitFlowProps) {
-  // Generate color for each contributor
+  // Generate pastel color for each contributor
   const contributorColors = useMemo(() => {
     const colors = new Map<number, string>()
     const contributorIds = Array.from(new Set(commits.map(c => c.contributorId)))
+    const pastelColors = ['#FDA4AF', '#FED7AA', '#6EE7B7', '#7DD3FC', '#C4B5FD', '#5EEAD4']
 
     contributorIds.forEach((id, index) => {
-      const hue = (index / contributorIds.length) * 360
-      colors.set(id, `hsl(${hue}, 80%, 70%)`)
+      colors.set(id, pastelColors[index % pastelColors.length])
     })
 
     return colors
@@ -60,27 +60,40 @@ export function CommitFlow({ commits }: CommitFlowProps) {
           {monthlyData.map((data, index) => {
             const height = (data.count / maxCount) * 100
 
+            // Gradient from mint → sky → lavender based on timeline position
+            const progress = index / Math.max(monthlyData.length - 1, 1)
+            const getBarColor = () => {
+              if (progress < 0.33) return '#6EE7B7' // Mint green (early)
+              if (progress < 0.66) return '#7DD3FC' // Sky blue (middle)
+              return '#C4B5FD' // Lavender (recent)
+            }
+
             return (
               <div
                 key={data.month}
                 className="flex-1 min-w-[20px] group relative cursor-pointer"
               >
                 <div
-                  className="w-full bg-white transition-all duration-300 group-hover:bg-gray-300"
-                  style={{ height: `${height}%` }}
+                  className="w-full transition-all duration-300 group-hover:brightness-125"
+                  style={{
+                    height: `${height}%`,
+                    backgroundColor: getBarColor()
+                  }}
                 />
 
                 {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white text-black px-3 py-2 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 border-2 border-black">
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 text-black px-3 py-2 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 rounded font-bold" style={{ backgroundColor: getBarColor() }}>
                   <div className="font-bold">{data.month}</div>
                   <div>{data.count} commits</div>
-                  <div className="text-gray-600">{data.contributorCount} contributors</div>
+                  <div className="opacity-80 text-xs">{data.contributorCount} contributors</div>
                 </div>
 
                 {/* Month label */}
-                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 text-xs font-mono text-gray-500 -rotate-45 origin-top-left whitespace-nowrap">
-                  {data.month}
-                </div>
+                {index % 3 === 0 && (
+                  <div className="absolute top-full mt-2 left-0 text-xs font-mono text-gray-500 whitespace-nowrap transform -rotate-45 origin-top-left">
+                    {data.month}
+                  </div>
+                )}
               </div>
             )
           })}

@@ -58,19 +58,25 @@ export function ActivityHeatmap({ commits, timeRange }: ActivityHeatmapProps) {
               const count = commitsByDate.get(dateKey) || 0
               const intensity = count / maxCommits
 
+              const getColor = () => {
+                if (count === 0) return '#111'
+                if (intensity < 0.25) return '#134E4A' // dark teal
+                if (intensity < 0.5) return '#14B8A6' // medium teal
+                if (intensity < 0.75) return '#5EEAD4' // bright teal
+                return '#6EE7B7' // mint green
+              }
+
               return (
                 <div
                   key={dayIndex}
-                  className="w-3 h-3 border border-gray-800 group relative cursor-pointer"
+                  className="w-3 h-3 border border-gray-800 group relative cursor-pointer transition-all hover:scale-125"
                   style={{
-                    backgroundColor: count === 0
-                      ? '#111'
-                      : `rgba(255, 255, 255, ${0.2 + intensity * 0.8})`
+                    backgroundColor: getColor()
                   }}
                   title={`${format(day, 'MMM d')}: ${count} commits`}
                 >
                   {/* Tooltip */}
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white text-black px-2 py-1 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 rounded text-black font-bold" style={{ backgroundColor: '#5EEAD4' }}>
                     {format(day, 'MMM d, yyyy')}
                     <br />
                     <span className="font-bold">{count}</span> commits
@@ -85,10 +91,11 @@ export function ActivityHeatmap({ commits, timeRange }: ActivityHeatmapProps) {
       {/* Legend */}
       <div className="flex items-center gap-2 mt-4 text-xs font-mono text-gray-400">
         <span>Less</span>
-        <div className="w-3 h-3 border border-gray-800 bg-[#111]" />
-        <div className="w-3 h-3 border border-gray-800 bg-white/30" />
-        <div className="w-3 h-3 border border-gray-800 bg-white/60" />
-        <div className="w-3 h-3 border border-gray-800 bg-white/90" />
+        <div className="w-3 h-3 border border-gray-800" style={{ backgroundColor: '#111' }} />
+        <div className="w-3 h-3 border border-gray-800" style={{ backgroundColor: '#134E4A' }} />
+        <div className="w-3 h-3 border border-gray-800" style={{ backgroundColor: '#14B8A6' }} />
+        <div className="w-3 h-3 border border-gray-800" style={{ backgroundColor: '#5EEAD4' }} />
+        <div className="w-3 h-3 border border-gray-800" style={{ backgroundColor: '#6EE7B7' }} />
         <span>More</span>
       </div>
     </div>

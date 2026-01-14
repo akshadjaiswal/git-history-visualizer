@@ -26,14 +26,16 @@ export function ContributorConstellation({ contributors, commits }: ContributorC
       .slice(0, 10) // Top 10
   }, [contributors, commits])
 
-  // Circular positioning
+  // Circular positioning and colors
   const positions = useMemo(() => {
+    const colors = ['#7DD3FC', '#6EE7B7', '#C4B5FD', '#FDA4AF', '#5EEAD4', '#FED7AA']
     return topContributors.map((_, index) => {
       const angle = (index / topContributors.length) * Math.PI * 2
       const radius = 40
       return {
         x: 50 + Math.cos(angle) * radius,
         y: 50 + Math.sin(angle) * radius,
+        color: colors[index % colors.length],
       }
     })
   }, [topContributors])
@@ -48,7 +50,12 @@ export function ContributorConstellation({ contributors, commits }: ContributorC
         {/* Center label */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="text-center">
-            <div className="font-mono text-4xl font-bold">
+            <div className="font-mono text-4xl font-bold" style={{
+              background: 'linear-gradient(135deg, #7DD3FC 0%, #C4B5FD 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
               {topContributors.length}
             </div>
             <div className="font-body text-sm text-gray-400">
@@ -68,15 +75,23 @@ export function ContributorConstellation({ contributors, commits }: ContributorC
             }}
           >
             {/* Circle */}
-            <div className="w-full h-full rounded-full border-2 border-white bg-gray-800 flex items-center justify-center font-mono text-xs overflow-hidden transition-transform group-hover:scale-125">
+            <div
+              className="w-full h-full rounded-full border-2 flex items-center justify-center font-mono text-xs font-bold overflow-hidden transition-all group-hover:scale-125 text-black"
+              style={{
+                backgroundColor: positions[index].color,
+                borderColor: positions[index].color,
+              }}
+            >
               {contributor.email.charAt(0).toUpperCase()}
             </div>
 
             {/* Tooltip on hover */}
-            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-white text-black px-2 py-1 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-              {contributor.email.split('@')[0]}
-              <br />
-              <span className="text-gray-600">{contributor.contributionCount} commits</span>
+            <div
+              className="absolute left-1/2 -translate-x-1/2 top-full mt-2 text-black px-3 py-2 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 rounded"
+              style={{ backgroundColor: positions[index].color }}
+            >
+              <div className="font-bold">{contributor.email.split('@')[0]}</div>
+              <div className="text-xs opacity-80">{contributor.contributionCount} commits</div>
             </div>
           </div>
         ))}

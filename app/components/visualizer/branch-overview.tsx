@@ -11,7 +11,14 @@ interface BranchOverviewProps {
 
 export function BranchOverview({ branches, commits }: BranchOverviewProps) {
   const branchStats = useMemo(() => {
-    return branches.map(branch => {
+    const gradients = [
+      { from: '#C4B5FD', to: '#FDA4AF' }, // Lavender to pink (main/highest)
+      { from: '#7DD3FC', to: '#5EEAD4' }, // Sky to teal
+      { from: '#FED7AA', to: '#FDA4AF' }, // Peach to coral
+      { from: '#6EE7B7', to: '#7DD3FC' }, // Mint to sky
+    ]
+
+    return branches.map((branch, index) => {
       const branchCommits = commits.filter(c => c.branch === branch.name)
       const lastCommit = branchCommits[branchCommits.length - 1]
 
@@ -20,6 +27,7 @@ export function BranchOverview({ branches, commits }: BranchOverviewProps) {
         commitCount: branchCommits.length,
         lastActivity: lastCommit?.date,
         percentage: (branchCommits.length / commits.length) * 100,
+        gradient: gradients[index % gradients.length],
       }
     }).sort((a, b) => b.commitCount - a.commitCount)
   }, [branches, commits])
@@ -37,18 +45,21 @@ export function BranchOverview({ branches, commits }: BranchOverviewProps) {
               <span className="font-mono text-sm font-bold truncate">
                 {branch.name}
               </span>
-              <span className="font-mono text-xs text-gray-400">
+              <span className="font-mono text-xs" style={{ color: branch.gradient.from }}>
                 {branch.commitCount}
               </span>
             </div>
 
             {/* Activity bar */}
-            <div className="h-6 border border-white relative overflow-hidden">
+            <div className="h-6 border-2 relative overflow-hidden transition-all hover:brightness-125" style={{ borderColor: branch.gradient.from }}>
               <div
-                className="h-full bg-white transition-all"
-                style={{ width: `${branch.percentage}%` }}
+                className="h-full transition-all"
+                style={{
+                  width: `${branch.percentage}%`,
+                  background: `linear-gradient(90deg, ${branch.gradient.from} 0%, ${branch.gradient.to} 100%)`
+                }}
               />
-              <span className="absolute inset-0 flex items-center justify-center font-mono text-xs text-black mix-blend-difference">
+              <span className="absolute inset-0 flex items-center justify-center font-mono text-xs font-bold text-black mix-blend-difference">
                 {branch.percentage.toFixed(0)}%
               </span>
             </div>
