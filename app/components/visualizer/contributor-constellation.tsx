@@ -41,12 +41,12 @@ export function ContributorConstellation({ contributors, commits }: ContributorC
   }, [topContributors])
 
   return (
-    <div className="h-full border-2 border-white bg-black p-6 overflow-hidden">
+    <div className="h-auto min-h-[280px] border-2 border-white bg-black p-4 overflow-hidden">
       <h2 className="font-display text-xl font-bold mb-4 border-b-2 border-white pb-2">
         Top Contributors
       </h2>
 
-      <div className="relative h-[calc(100%-4rem)]">
+      <div className="relative h-[220px]">
         {/* Center label */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="text-center">

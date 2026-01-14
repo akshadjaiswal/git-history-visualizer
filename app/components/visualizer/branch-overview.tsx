@@ -33,12 +33,12 @@ export function BranchOverview({ branches, commits }: BranchOverviewProps) {
   }, [branches, commits])
 
   return (
-    <div className="h-full border-2 border-white bg-black p-6 overflow-auto">
-      <h2 className="font-display text-xl font-bold mb-6 border-b-2 border-white pb-2">
+    <div className="h-auto min-h-[280px] border-2 border-white bg-black p-4 overflow-auto">
+      <h2 className="font-display text-xl font-bold mb-4 border-b-2 border-white pb-2">
         Branches
       </h2>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {branchStats.map(branch => (
           <div key={branch.name}>
             <div className="flex items-center justify-between mb-2">

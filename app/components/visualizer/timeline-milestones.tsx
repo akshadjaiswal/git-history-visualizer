@@ -39,8 +39,8 @@ export function TimelineMilestones({ commits, timeRange }: TimelineMilestonesPro
   }, [commits, timeRange])
 
   return (
-    <div className="h-full border-2 border-white bg-black p-6 overflow-auto">
-      <h2 className="font-display text-xl font-bold mb-6 border-b-2 border-white pb-2">
+    <div className="h-auto min-h-[280px] border-2 border-white bg-black p-4 overflow-auto">
+      <h2 className="font-display text-xl font-bold mb-4 border-b-2 border-white pb-2">
         Timeline
       </h2>
 
@@ -51,7 +51,7 @@ export function TimelineMilestones({ commits, timeRange }: TimelineMilestonesPro
         }} />
 
         {/* Milestones */}
-        <div className="space-y-8">
+        <div className="space-y-6">
           {milestones.map((milestone, index) => (
             <div key={index} className="relative pl-14">
               {/* Circle marker */}

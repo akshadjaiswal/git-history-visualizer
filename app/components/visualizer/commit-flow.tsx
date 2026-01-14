@@ -45,9 +45,9 @@ export function CommitFlow({ commits }: CommitFlowProps) {
   const maxCount = Math.max(...monthlyData.map(d => d.count), 1)
 
   return (
-    <div className="h-full border-2 border-white bg-black relative overflow-hidden flex flex-col">
+    <div className="h-auto min-h-[400px] max-h-[500px] border-2 border-white bg-black relative overflow-hidden flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b-2 border-white">
+      <div className="p-4 border-b-2 border-white">
         <h2 className="font-display text-2xl font-bold">Commit Activity</h2>
         <p className="font-mono text-sm text-gray-400 mt-1">
           {commits.length.toLocaleString()} total commits
@@ -55,7 +55,7 @@ export function CommitFlow({ commits }: CommitFlowProps) {
       </div>
 
       {/* Timeline visualization */}
-      <div className="flex-1 p-6 overflow-x-auto">
+      <div className="flex-1 p-4 overflow-x-auto min-h-[200px]">
         <div className="flex items-end gap-1 h-full">
           {monthlyData.map((data, index) => {
             const height = (data.count / maxCount) * 100
@@ -101,7 +101,7 @@ export function CommitFlow({ commits }: CommitFlowProps) {
       </div>
 
       {/* Recent commits stream */}
-      <div className="p-6 border-t-2 border-white bg-gradient-to-b from-black to-gray-900 max-h-48 overflow-y-auto">
+      <div className="p-4 border-t-2 border-white bg-gradient-to-b from-black to-gray-900 max-h-40 overflow-y-auto">
         <h3 className="font-display text-lg font-bold mb-3">Recent Commits</h3>
         <div className="space-y-2">
           {commits.slice(-10).reverse().map((commit, index) => (

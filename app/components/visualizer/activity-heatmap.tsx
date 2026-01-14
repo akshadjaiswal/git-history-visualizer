@@ -45,7 +45,7 @@ export function ActivityHeatmap({ commits, timeRange }: ActivityHeatmapProps) {
   }, [timeRange])
 
   return (
-    <div className="h-full border-2 border-white bg-black p-6 overflow-x-auto">
+    <div className="h-auto min-h-[280px] max-h-[350px] border-2 border-white bg-black p-4 overflow-x-auto">
       <h2 className="font-display text-xl font-bold mb-4 border-b-2 border-white pb-2">
         Commit Activity
       </h2>

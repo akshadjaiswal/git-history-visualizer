@@ -150,43 +150,39 @@ function VisualizerContent() {
   if (!data) return null
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white pt-20">
       {/* Top Bar */}
       <TopBar owner={owner} repo={repo} />
 
-      {/* Dashboard Grid */}
-      <div className="min-h-[calc(100vh-64px)] mt-16 grid grid-cols-12 grid-rows-12 gap-3 p-3">
-        {/* Top Left - Stats Card */}
-        <div className="col-span-3 row-span-4">
-          <StatsCard data={data.repoMetadata} contributors={data.contributors.size} />
+      {/* Dashboard Grid - Flexible rows */}
+      <div className="p-4 space-y-4">
+        {/* Row 1: Top panels */}
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-3">
+            <StatsCard data={data.repoMetadata} contributors={data.contributors.size} />
+          </div>
+          <div className="col-span-6">
+            <CommitFlow commits={data.commits} />
+          </div>
+          <div className="col-span-3">
+            <ContributorConstellation
+              contributors={Array.from(data.contributors.entries())}
+              commits={data.commits}
+            />
+          </div>
         </div>
 
-        {/* Center - Main Visualization */}
-        <div className="col-span-6 row-span-8">
-          <CommitFlow commits={data.commits} />
-        </div>
-
-        {/* Top Right - Contributors */}
-        <div className="col-span-3 row-span-4">
-          <ContributorConstellation
-            contributors={Array.from(data.contributors.entries())}
-            commits={data.commits}
-          />
-        </div>
-
-        {/* Left Side - Timeline */}
-        <div className="col-span-3 row-span-8 row-start-5">
-          <TimelineMilestones commits={data.commits} timeRange={data.timeRange} />
-        </div>
-
-        {/* Right Side - Branches */}
-        <div className="col-span-3 row-span-8 row-start-5">
-          <BranchOverview branches={data.branches} commits={data.commits} />
-        </div>
-
-        {/* Bottom - Activity Heatmap */}
-        <div className="col-span-6 row-span-4 row-start-9">
-          <ActivityHeatmap commits={data.commits} timeRange={data.timeRange} />
+        {/* Row 2: Bottom panels */}
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-3">
+            <TimelineMilestones commits={data.commits} timeRange={data.timeRange} />
+          </div>
+          <div className="col-span-6">
+            <ActivityHeatmap commits={data.commits} timeRange={data.timeRange} />
+          </div>
+          <div className="col-span-3">
+            <BranchOverview branches={data.branches} commits={data.commits} />
+          </div>
         </div>
       </div>
     </div>
