@@ -17,7 +17,7 @@ export function Footer() {
           </a>
         </div>
         <p className="text-xs text-gray-400 mt-8 font-body">
-          © 2025 Git History Visualizer. All rights reserved.
+          © {new Date().getFullYear()} Git History Visualizer. All rights reserved.
         </p>
       </div>
     </footer>

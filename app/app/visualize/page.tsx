@@ -155,16 +155,16 @@ function VisualizerContent() {
       <TopBar owner={owner} repo={repo} />
 
       {/* Dashboard Grid - Flexible rows */}
-      <div className="p-4 space-y-4">
+      <div className="px-2 md:px-4 py-3 md:py-4 space-y-3 md:space-y-4">
         {/* Row 1: Top panels */}
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-3">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4">
+          <div className="col-span-full md:col-span-3">
             <StatsCard data={data.repoMetadata} contributors={data.contributors.size} />
           </div>
-          <div className="col-span-6">
+          <div className="col-span-full md:col-span-6">
             <CommitFlow commits={data.commits} />
           </div>
-          <div className="col-span-3">
+          <div className="col-span-full md:col-span-3">
             <ContributorConstellation
               contributors={Array.from(data.contributors.entries())}
               commits={data.commits}
@@ -173,14 +173,14 @@ function VisualizerContent() {
         </div>
 
         {/* Row 2: Bottom panels */}
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-3">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4">
+          <div className="col-span-full md:col-span-3">
             <TimelineMilestones commits={data.commits} timeRange={data.timeRange} />
           </div>
-          <div className="col-span-6">
+          <div className="col-span-full md:col-span-6">
             <ActivityHeatmap commits={data.commits} timeRange={data.timeRange} />
           </div>
-          <div className="col-span-3">
+          <div className="col-span-full md:col-span-3">
             <BranchOverview branches={data.branches} commits={data.commits} />
           </div>
         </div>

@@ -77,7 +77,7 @@ export function ActivityHeatmap({ commits, timeRange }: ActivityHeatmapProps) {
                     title={`${format(day, 'MMM d')}: ${count} commits`}
                   >
                     {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 rounded text-black font-bold" style={{ backgroundColor: '#5EEAD4' }}>
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 rounded border-2 border-white text-black font-bold" style={{ backgroundColor: '#5EEAD4' }}>
                       {format(day, 'MMM d, yyyy')}
                       <br />
                       <span className="font-bold">{count}</span> commits
