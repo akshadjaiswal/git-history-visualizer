@@ -33,7 +33,7 @@ export function BranchOverview({ branches, commits }: BranchOverviewProps) {
   }, [branches, commits])
 
   return (
-    <div className="h-auto min-h-[280px] border-2 border-white bg-black p-4 overflow-auto">
+    <div className="h-auto min-h-[280px] max-h-[350px] border-2 border-white bg-black p-4 overflow-y-auto">
       <h2 className="font-display text-xl font-bold mb-4 border-b-2 border-white pb-2">
         Branches
       </h2>
@@ -59,8 +59,10 @@ export function BranchOverview({ branches, commits }: BranchOverviewProps) {
                   background: `linear-gradient(90deg, ${branch.gradient.from} 0%, ${branch.gradient.to} 100%)`
                 }}
               />
-              <span className="absolute inset-0 flex items-center justify-center font-mono text-xs font-bold text-black mix-blend-difference">
-                {branch.percentage.toFixed(0)}%
+              <span className="absolute inset-0 flex items-center justify-center font-mono text-xs font-bold">
+                <span className="bg-black text-white px-2 py-0.5 rounded-sm">
+                  {branch.percentage.toFixed(0)}%
+                </span>
               </span>
             </div>
 

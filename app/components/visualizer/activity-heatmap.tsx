@@ -50,46 +50,48 @@ export function ActivityHeatmap({ commits, timeRange }: ActivityHeatmapProps) {
         Commit Activity
       </h2>
 
-      <div className="flex gap-1">
-        {weeks.map((week, weekIndex) => (
-          <div key={weekIndex} className="flex flex-col gap-1">
-            {week.map((day, dayIndex) => {
-              const dateKey = format(day, 'yyyy-MM-dd')
-              const count = commitsByDate.get(dateKey) || 0
-              const intensity = count / maxCommits
+      <div className="flex-1 overflow-x-auto mb-4">
+        <div className="flex gap-1">
+          {weeks.map((week, weekIndex) => (
+            <div key={weekIndex} className="flex flex-col gap-1">
+              {week.map((day, dayIndex) => {
+                const dateKey = format(day, 'yyyy-MM-dd')
+                const count = commitsByDate.get(dateKey) || 0
+                const intensity = count / maxCommits
 
-              const getColor = () => {
-                if (count === 0) return '#111'
-                if (intensity < 0.25) return '#134E4A' // dark teal
-                if (intensity < 0.5) return '#14B8A6' // medium teal
-                if (intensity < 0.75) return '#5EEAD4' // bright teal
-                return '#6EE7B7' // mint green
-              }
+                const getColor = () => {
+                  if (count === 0) return '#111'
+                  if (intensity < 0.25) return '#134E4A' // dark teal
+                  if (intensity < 0.5) return '#14B8A6' // medium teal
+                  if (intensity < 0.75) return '#5EEAD4' // bright teal
+                  return '#6EE7B7' // mint green
+                }
 
-              return (
-                <div
-                  key={dayIndex}
-                  className="w-3 h-3 border border-gray-800 group relative cursor-pointer transition-all hover:scale-125"
-                  style={{
-                    backgroundColor: getColor()
-                  }}
-                  title={`${format(day, 'MMM d')}: ${count} commits`}
-                >
-                  {/* Tooltip */}
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 rounded text-black font-bold" style={{ backgroundColor: '#5EEAD4' }}>
-                    {format(day, 'MMM d, yyyy')}
-                    <br />
-                    <span className="font-bold">{count}</span> commits
+                return (
+                  <div
+                    key={dayIndex}
+                    className="w-3 h-3 border border-gray-800 group relative cursor-pointer transition-all hover:scale-125"
+                    style={{
+                      backgroundColor: getColor()
+                    }}
+                    title={`${format(day, 'MMM d')}: ${count} commits`}
+                  >
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 rounded text-black font-bold" style={{ backgroundColor: '#5EEAD4' }}>
+                      {format(day, 'MMM d, yyyy')}
+                      <br />
+                      <span className="font-bold">{count}</span> commits
+                    </div>
                   </div>
-                </div>
-              )
-            })}
-          </div>
-        ))}
+                )
+              })}
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Legend */}
-      <div className="flex items-center gap-2 mt-4 text-xs font-mono text-gray-400">
+      {/* Legend - Fixed at bottom */}
+      <div className="flex items-center gap-2 text-xs font-mono text-gray-400 pt-3 border-t border-gray-800">
         <span>Less</span>
         <div className="w-3 h-3 border border-gray-800" style={{ backgroundColor: '#111' }} />
         <div className="w-3 h-3 border border-gray-800" style={{ backgroundColor: '#134E4A' }} />
