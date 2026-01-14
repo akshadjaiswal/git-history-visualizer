@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import type { CommitNode } from '@/types/github'
 
 interface CommitFlowProps {
@@ -44,6 +44,35 @@ export function CommitFlow({ commits }: CommitFlowProps) {
 
   const maxCount = Math.max(...monthlyData.map(d => d.count), 1)
 
+  const [hoveredMonth, setHoveredMonth] = useState<typeof monthlyData[0] | null>(null)
+
+  // Helper function to generate line path
+  const generateLinePath = (data: typeof monthlyData, max: number) => {
+    if (data.length === 0) return ''
+    const points = data.map((d, i) => {
+      const x = (i / Math.max(data.length - 1, 1)) * 1000
+      const y = 300 - ((d.count / max) * 280) // 280 max height, 20px padding
+      return `${x},${y}`
+    })
+    return `M ${points.join(' L ')}`
+  }
+
+  // Helper function to generate area path
+  const generateAreaPath = (data: typeof monthlyData, max: number) => {
+    if (data.length === 0) return ''
+    const linePath = generateLinePath(data, max)
+    const lastX = 1000
+    return `${linePath} L ${lastX},300 L 0,300 Z`
+  }
+
+  // Get color based on timeline position
+  const getPointColor = (index: number) => {
+    const progress = index / Math.max(monthlyData.length - 1, 1)
+    if (progress < 0.33) return '#6EE7B7' // Mint green (early)
+    if (progress < 0.66) return '#7DD3FC' // Sky blue (middle)
+    return '#C4B5FD' // Lavender (recent)
+  }
+
   return (
     <div className="h-auto min-h-[400px] max-h-[500px] border-2 border-white bg-black relative overflow-hidden flex flex-col">
       {/* Header */}
@@ -54,46 +83,113 @@ export function CommitFlow({ commits }: CommitFlowProps) {
         </p>
       </div>
 
-      {/* Timeline visualization */}
-      <div className="flex-1 p-4 overflow-x-auto min-h-[200px]">
-        <div className="flex items-end gap-1 h-full">
+      {/* SVG Line/Area Chart */}
+      <div className="flex-1 p-4 relative min-h-[200px]">
+        <svg
+          className="w-full h-full"
+          viewBox="0 0 1000 300"
+          preserveAspectRatio="none"
+        >
+          {/* Gradient definition */}
+          <defs>
+            <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#6EE7B7" stopOpacity="0.4"/>
+              <stop offset="100%" stopColor="#6EE7B7" stopOpacity="0.05"/>
+            </linearGradient>
+          </defs>
+
+          {/* Reference grid lines */}
+          {[0, 25, 50, 75, 100].map(y => (
+            <line
+              key={y}
+              x1="0"
+              y1={300 - (y * 2.8)}
+              x2="1000"
+              y2={300 - (y * 2.8)}
+              stroke="#333"
+              strokeWidth="1"
+            />
+          ))}
+
+          {/* Area fill */}
+          <path
+            d={generateAreaPath(monthlyData, maxCount)}
+            fill="url(#areaGradient)"
+          />
+
+          {/* Line */}
+          <path
+            d={generateLinePath(monthlyData, maxCount)}
+            fill="none"
+            stroke="white"
+            strokeWidth="2"
+          />
+
+          {/* Data points */}
           {monthlyData.map((data, index) => {
-            const height = (data.count / maxCount) * 100
+            const x = (index / Math.max(monthlyData.length - 1, 1)) * 1000
+            const y = 300 - ((data.count / maxCount) * 280)
+            const color = getPointColor(index)
 
-            // Gradient from mint → sky → lavender based on timeline position
-            const progress = index / Math.max(monthlyData.length - 1, 1)
-            const getBarColor = () => {
-              if (progress < 0.33) return '#6EE7B7' // Mint green (early)
-              if (progress < 0.66) return '#7DD3FC' // Sky blue (middle)
-              return '#C4B5FD' // Lavender (recent)
-            }
+            return (
+              <g key={index}>
+                <circle
+                  cx={x}
+                  cy={y}
+                  r="4"
+                  fill={color}
+                  className="cursor-pointer transition-all"
+                  style={{ filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.5))' }}
+                  onMouseEnter={() => setHoveredMonth(data)}
+                  onMouseLeave={() => setHoveredMonth(null)}
+                />
+                {hoveredMonth === data && (
+                  <g>
+                    {/* Tooltip background */}
+                    <rect
+                      x={Math.min(Math.max(x - 60, 0), 880)}
+                      y={Math.max(y - 60, 10)}
+                      width="120"
+                      height="50"
+                      fill={color}
+                      rx="4"
+                    />
+                    {/* Tooltip text */}
+                    <text
+                      x={Math.min(Math.max(x, 60), 940)}
+                      y={Math.max(y - 40, 30)}
+                      textAnchor="middle"
+                      className="font-mono text-xs font-bold"
+                      fill="#000"
+                    >
+                      <tspan x={Math.min(Math.max(x, 60), 940)} dy="0">{data.month}</tspan>
+                      <tspan x={Math.min(Math.max(x, 60), 940)} dy="15">{data.count} commits</tspan>
+                      <tspan x={Math.min(Math.max(x, 60), 940)} dy="15">{data.contributorCount} contributors</tspan>
+                    </text>
+                  </g>
+                )}
+              </g>
+            )
+          })}
+        </svg>
 
+        {/* Month labels */}
+        <div className="absolute bottom-0 left-4 right-4 h-8 pointer-events-none">
+          {monthlyData.filter((_, i) => i % 3 === 0).map((data, idx) => {
+            const originalIndex = idx * 3
+            const x = (originalIndex / Math.max(monthlyData.length - 1, 1)) * 100
             return (
               <div
                 key={data.month}
-                className="flex-1 min-w-[20px] group relative cursor-pointer"
+                className="absolute text-xs font-mono text-gray-500 whitespace-nowrap"
+                style={{
+                  left: `${x}%`,
+                  transform: 'rotate(-45deg)',
+                  transformOrigin: 'top left',
+                  marginTop: '4px'
+                }}
               >
-                <div
-                  className="w-full transition-all duration-300 group-hover:brightness-125"
-                  style={{
-                    height: `${height}%`,
-                    backgroundColor: getBarColor()
-                  }}
-                />
-
-                {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 text-black px-3 py-2 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 rounded font-bold" style={{ backgroundColor: getBarColor() }}>
-                  <div className="font-bold">{data.month}</div>
-                  <div>{data.count} commits</div>
-                  <div className="opacity-80 text-xs">{data.contributorCount} contributors</div>
-                </div>
-
-                {/* Month label */}
-                {index % 3 === 0 && (
-                  <div className="absolute top-full mt-2 left-0 text-xs font-mono text-gray-500 whitespace-nowrap transform -rotate-45 origin-top-left">
-                    {data.month}
-                  </div>
-                )}
+                {data.month}
               </div>
             )
           })}
@@ -107,7 +203,7 @@ export function CommitFlow({ commits }: CommitFlowProps) {
           {commits.slice(-10).reverse().map((commit, index) => (
             <div key={commit.sha} className="flex items-start gap-3 group">
               <div
-                className="w-3 h-3 rounded-full border border-white mt-1 flex-shrink-0"
+                className="w-4 h-4 rounded-full border border-white mt-1 flex-shrink-0"
                 style={{ backgroundColor: contributorColors.get(commit.contributorId) }}
               />
               <div className="flex-1 min-w-0">
