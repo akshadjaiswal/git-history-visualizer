@@ -61,20 +61,55 @@ function VisualizerContent() {
 
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center max-w-lg px-8">
-          <h1 className="font-display text-4xl font-semibold mb-4">Error</h1>
-          <p className="font-body text-gray-600 mb-6">{errorMessage}</p>
-
+        <div className="text-center max-w-2xl px-8">
           {isRateLimit && (
-            <p className="font-body text-sm text-gray-500 mb-6">
-              Try authenticating with GitHub for higher rate limits (5000 req/hr instead of 60 req/hr).
-            </p>
+            <div className="space-y-3 mb-6">
+              <div className="text-5xl mb-2">⏰</div>
+              <h1 className="font-display text-3xl font-semibold text-gray-800 mb-2">
+                We're Taking a Break
+              </h1>
+              <p className="font-body text-gray-600 text-lg">
+                This repository has reached GitHub's hourly request limit.
+              </p>
+              <p className="font-body text-gray-700 font-semibold text-xl">
+                Please try again in about an hour.
+              </p>
+              <p className="font-body text-sm text-gray-500 mt-4">
+                You can also try visualizing a different repository in the meantime.
+              </p>
+            </div>
           )}
 
           {isNotFound && (
-            <p className="font-body text-sm text-gray-500 mb-6">
-              Make sure the repository exists and is public. Check the owner and repository name.
-            </p>
+            <div className="space-y-3 mb-6">
+              <div className="text-5xl mb-2">🔍</div>
+              <h1 className="font-display text-3xl font-semibold text-gray-800 mb-2">
+                Repository Not Found
+              </h1>
+              <p className="font-body text-gray-600 mb-4">
+                We couldn't find this repository. Please check:
+              </p>
+              <ul className="text-left inline-block text-sm text-gray-600 space-y-1 mb-4">
+                <li>• The repository URL is correct</li>
+                <li>• The repository is public (we can't access private repos)</li>
+                <li>• The owner and repository name are spelled correctly</li>
+              </ul>
+            </div>
+          )}
+
+          {!isRateLimit && !isNotFound && (
+            <div className="space-y-3 mb-6">
+              <div className="text-5xl mb-2">😕</div>
+              <h1 className="font-display text-3xl font-semibold text-gray-800 mb-2">
+                Something Went Wrong
+              </h1>
+              <p className="font-body text-gray-600 mb-4">
+                {errorMessage}
+              </p>
+              <p className="font-body text-sm text-gray-500">
+                Try refreshing the page or selecting a different repository.
+              </p>
+            </div>
           )}
 
           <div className="flex gap-4 justify-center">
@@ -155,16 +190,16 @@ function VisualizerContent() {
       <TopBar owner={owner} repo={repo} />
 
       {/* Dashboard Grid - Flexible rows */}
-      <div className="p-4 space-y-4">
+      <div className="px-2 md:px-4 py-3 md:py-4 space-y-3 md:space-y-4">
         {/* Row 1: Top panels */}
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-3">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4">
+          <div className="col-span-full md:col-span-3">
             <StatsCard data={data.repoMetadata} contributors={data.contributors.size} />
           </div>
-          <div className="col-span-6">
+          <div className="col-span-full md:col-span-6">
             <CommitFlow commits={data.commits} />
           </div>
-          <div className="col-span-3">
+          <div className="col-span-full md:col-span-3">
             <ContributorConstellation
               contributors={Array.from(data.contributors.entries())}
               commits={data.commits}
@@ -173,14 +208,14 @@ function VisualizerContent() {
         </div>
 
         {/* Row 2: Bottom panels */}
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-3">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4">
+          <div className="col-span-full md:col-span-3">
             <TimelineMilestones commits={data.commits} timeRange={data.timeRange} />
           </div>
-          <div className="col-span-6">
+          <div className="col-span-full md:col-span-6">
             <ActivityHeatmap commits={data.commits} timeRange={data.timeRange} />
           </div>
-          <div className="col-span-3">
+          <div className="col-span-full md:col-span-3">
             <BranchOverview branches={data.branches} commits={data.commits} />
           </div>
         </div>

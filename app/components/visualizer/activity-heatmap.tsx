@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { format, eachDayOfInterval, eachWeekOfInterval, startOfWeek, endOfWeek } from 'date-fns'
 import type { CommitNode } from '@/types/github'
 
@@ -13,6 +13,14 @@ interface ActivityHeatmapProps {
 }
 
 export function ActivityHeatmap({ commits, timeRange }: ActivityHeatmapProps) {
+  // Tooltip state for fixed positioning
+  const [tooltipData, setTooltipData] = useState<{
+    date: Date
+    count: number
+    x: number
+    y: number
+  } | null>(null)
+
   // Group commits by date
   const commitsByDate = useMemo(() => {
     const map = new Map<string, number>()
@@ -70,19 +78,21 @@ export function ActivityHeatmap({ commits, timeRange }: ActivityHeatmapProps) {
                 return (
                   <div
                     key={dayIndex}
-                    className="w-3 h-3 border border-gray-800 group relative cursor-pointer transition-all hover:scale-125"
+                    className="w-3 h-3 border border-gray-800 cursor-pointer transition-all hover:scale-125"
                     style={{
                       backgroundColor: getColor()
                     }}
-                    title={`${format(day, 'MMM d')}: ${count} commits`}
-                  >
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 rounded text-black font-bold" style={{ backgroundColor: '#5EEAD4' }}>
-                      {format(day, 'MMM d, yyyy')}
-                      <br />
-                      <span className="font-bold">{count}</span> commits
-                    </div>
-                  </div>
+                    onMouseEnter={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect()
+                      setTooltipData({
+                        date: day,
+                        count,
+                        x: rect.left + rect.width / 2,
+                        y: rect.top
+                      })
+                    }}
+                    onMouseLeave={() => setTooltipData(null)}
+                  />
                 )
               })}
             </div>
@@ -100,6 +110,23 @@ export function ActivityHeatmap({ commits, timeRange }: ActivityHeatmapProps) {
         <div className="w-3 h-3 border border-gray-800" style={{ backgroundColor: '#6EE7B7' }} />
         <span>More</span>
       </div>
+
+      {/* Fixed-position tooltip - renders outside scroll container */}
+      {tooltipData && (
+        <div
+          className="fixed px-3 py-2 text-xs font-mono whitespace-nowrap rounded border-2 border-white text-black font-bold pointer-events-none z-[100]"
+          style={{
+            backgroundColor: '#5EEAD4',
+            left: `${tooltipData.x}px`,
+            top: `${tooltipData.y - 50}px`,
+            transform: 'translateX(-50%)'
+          }}
+        >
+          {format(tooltipData.date, 'MMM d, yyyy')}
+          <br />
+          <span className="font-bold">{tooltipData.count}</span> commits
+        </div>
+      )}
     </div>
   )
 }

@@ -22,22 +22,22 @@ export function HeroSection() {
   }
 
   const sampleRepos = [
-    { owner: 'facebook', repo: 'react', label: 'React' },
-    { owner: 'vuejs', repo: 'vue', label: 'Vue.js' },
-    { owner: 'torvalds', repo: 'linux', label: 'Linux' },
+    { owner: 'facebook', repo: 'create-react-app', label: 'Create React App' },
+    { owner: 'remix-run', repo: 'remix', label: 'Remix' },
+    { owner: 'sveltejs', repo: 'svelte', label: 'Svelte' },
   ]
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-texture-lines relative">
       <div className="max-w-5xl mx-auto px-8 py-20 text-center">
         {/* Headline */}
-        <h1 className="font-display text-7xl md:text-8xl lg:text-9xl font-bold mb-8 tracking-tight">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold mb-6 sm:mb-8 tracking-tight">
           Travel Through
           <br />
           <span className="block mt-2">Git History</span>
         </h1>
 
-        <p className="text-xl md:text-2xl font-light mb-16 max-w-2xl mx-auto text-gray-600">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-light mb-12 sm:mb-14 md:mb-16 max-w-xs sm:max-w-xl md:max-w-2xl mx-auto text-gray-600 px-4">
           Transform any GitHub repository into an interactive 3D constellation.
           Explore commits, branches, and contributors across time.
         </p>
@@ -60,7 +60,7 @@ export function HeroSection() {
         </form>
 
         {/* Sample Repos */}
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mb-8 md:mb-12 px-4">
           <span className="text-sm text-gray-500 w-full mb-2 font-body">Or try these:</span>
           {sampleRepos.map(({ owner, repo, label }) => (
             <Button

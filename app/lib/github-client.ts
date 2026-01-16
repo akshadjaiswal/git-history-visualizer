@@ -1,13 +1,16 @@
-import { Octokit } from '@octokit/rest'
 import type { GitHubRepo, GitHubCommit, GitHubBranch, GitHubContributor, FetchProgress } from '@/types/github'
 
 export class GitHubClient {
-  private octokit: Octokit
+  private baseUrl: string
 
-  constructor(token?: string) {
-    this.octokit = new Octokit({
-      auth: token, // Optional: for higher rate limits and private repos
-    })
+  constructor() {
+    // Use server-side API route for all GitHub requests
+    this.baseUrl = '/api/github'
+
+    // Log that we're using server-side API (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[GitHub Client] Using server-side API with authentication')
+    }
   }
 
   /**
@@ -15,32 +18,16 @@ export class GitHubClient {
    */
   async getRepo(owner: string, repo: string): Promise<GitHubRepo> {
     try {
-      const { data } = await this.octokit.repos.get({ owner, repo })
-      return {
-        name: data.name,
-        owner: data.owner.login,
-        fullName: data.full_name,
-        description: data.description,
-        stars: data.stargazers_count,
-        forks: data.forks_count,
-        defaultBranch: data.default_branch,
-        createdAt: data.created_at,
-        updatedAt: data.updated_at,
-        // Additional metadata for dashboard
-        language: data.language,
-        topics: data.topics || [],
-        size: data.size,
-        openIssues: data.open_issues_count,
-        watchers: data.watchers_count,
-        license: data.license?.name || null,
-        isArchived: data.archived,
+      const url = `${this.baseUrl}?action=repo&owner=${owner}&repo=${repo}`
+      const response = await fetch(url)
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to fetch repository')
       }
+
+      return await response.json()
     } catch (error: any) {
-      if (error.status === 404) {
-        throw new Error('Repository not found. Please check the owner and repository name.')
-      } else if (error.status === 403) {
-        throw new Error('Rate limit exceeded. Please authenticate with GitHub for higher limits.')
-      }
       throw new Error(`Failed to fetch repository: ${error.message}`)
     }
   }
@@ -60,37 +47,28 @@ export class GitHubClient {
     } = {}
   ): Promise<GitHubCommit[]> {
     try {
-      const { data } = await this.octokit.repos.listCommits({
+      const params = new URLSearchParams({
+        action: 'commits',
         owner,
         repo,
-        sha: options.branch,
-        per_page: options.perPage || 100,
-        page: options.page || 1,
-        since: options.since,
-        until: options.until,
+        page: String(options.page || 1),
+        perPage: String(options.perPage || 100),
       })
 
-      return data.map(commit => ({
-        sha: commit.sha,
-        message: commit.commit.message,
-        author: {
-          name: commit.commit.author?.name || 'Unknown',
-          email: commit.commit.author?.email || 'unknown@example.com',
-          date: commit.commit.author?.date || new Date().toISOString(),
-        },
-        committer: {
-          name: commit.commit.committer?.name || 'Unknown',
-          email: commit.commit.committer?.email || 'unknown@example.com',
-          date: commit.commit.committer?.date || new Date().toISOString(),
-        },
-        parents: commit.parents.map(p => p.sha),
-      }))
-    } catch (error: any) {
-      if (error.status === 403) {
-        throw new Error('Rate limit exceeded. Please authenticate with GitHub for higher limits.')
-      } else if (error.status === 404) {
-        throw new Error('Repository or branch not found.')
+      if (options.branch) params.append('branch', options.branch)
+      if (options.since) params.append('since', options.since)
+      if (options.until) params.append('until', options.until)
+
+      const url = `${this.baseUrl}?${params.toString()}`
+      const response = await fetch(url)
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to fetch commits')
       }
+
+      return await response.json()
+    } catch (error: any) {
       throw new Error(`Failed to fetch commits: ${error.message}`)
     }
   }
@@ -154,21 +132,16 @@ export class GitHubClient {
    */
   async getBranches(owner: string, repo: string): Promise<GitHubBranch[]> {
     try {
-      const { data } = await this.octokit.repos.listBranches({
-        owner,
-        repo,
-        per_page: 100,
-      })
+      const url = `${this.baseUrl}?action=branches&owner=${owner}&repo=${repo}`
+      const response = await fetch(url)
 
-      return data.map(branch => ({
-        name: branch.name,
-        commitSha: branch.commit.sha,
-        protected: branch.protected,
-      }))
-    } catch (error: any) {
-      if (error.status === 403) {
-        throw new Error('Rate limit exceeded. Please authenticate with GitHub for higher limits.')
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to fetch branches')
       }
+
+      return await response.json()
+    } catch (error: any) {
       throw new Error(`Failed to fetch branches: ${error.message}`)
     }
   }
@@ -178,22 +151,16 @@ export class GitHubClient {
    */
   async getContributors(owner: string, repo: string): Promise<GitHubContributor[]> {
     try {
-      const { data } = await this.octokit.repos.listContributors({
-        owner,
-        repo,
-        per_page: 100,
-      })
+      const url = `${this.baseUrl}?action=contributors&owner=${owner}&repo=${repo}`
+      const response = await fetch(url)
 
-      return data.map(contributor => ({
-        login: contributor.login || 'Unknown',
-        contributions: contributor.contributions,
-        avatarUrl: contributor.avatar_url || '',
-        id: contributor.id || 0,
-      }))
-    } catch (error: any) {
-      if (error.status === 403) {
-        throw new Error('Rate limit exceeded. Please authenticate with GitHub for higher limits.')
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to fetch contributors')
       }
+
+      return await response.json()
+    } catch (error: any) {
       throw new Error(`Failed to fetch contributors: ${error.message}`)
     }
   }
@@ -207,12 +174,15 @@ export class GitHubClient {
     reset: Date
   }> {
     try {
-      const { data } = await this.octokit.rateLimit.get()
-      return {
-        limit: data.resources.core.limit,
-        remaining: data.resources.core.remaining,
-        reset: new Date(data.resources.core.reset * 1000),
+      const url = `${this.baseUrl}?action=rateLimit`
+      const response = await fetch(url)
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to fetch rate limit')
       }
+
+      return await response.json()
     } catch (error: any) {
       throw new Error(`Failed to fetch rate limit: ${error.message}`)
     }
@@ -221,12 +191,8 @@ export class GitHubClient {
 
 /**
  * Create a GitHub client instance
- * Checks for auth token in localStorage
+ * Uses server-side API route which handles authentication securely
  */
 export function createGitHubClient(): GitHubClient {
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('github_token')
-    return new GitHubClient(token || undefined)
-  }
   return new GitHubClient()
 }

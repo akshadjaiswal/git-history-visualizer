@@ -40,7 +40,7 @@ export function ExamplesSection() {
           Click any repository to explore its history in 3D
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-8 md:mb-12">
           {examples.map((example) => (
             <Card
               key={`${example.owner}/${example.repo}`}
@@ -48,7 +48,7 @@ export function ExamplesSection() {
               onClick={() => router.push(`/visualize?owner=${example.owner}&repo=${example.repo}`)}
             >
               {/* Placeholder for preview image */}
-              <div className="h-64 bg-gray-100 flex items-center justify-center border-b-2 border-black">
+              <div className="h-40 sm:h-48 md:h-64 bg-gray-100 flex items-center justify-center border-b-2 border-black">
                 <span className="text-8xl font-display font-bold text-gray-300">{example.name[0]}</span>
               </div>
 
