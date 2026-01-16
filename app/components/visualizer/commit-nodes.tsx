@@ -30,7 +30,7 @@ export function CommitNodes({ commits, isMobile = false }: CommitNodesProps) {
       result = result.filter((_, index) => index % 3 === 0)
     }
 
-    return result.slice(0, isMobile ? 2500 : 10000)
+    return result.slice(0, isMobile ? 2500 : 5000)
   }, [commits, getFilteredCommits, isMobile])
 
   // Generate colors for each commit based on contributor ID

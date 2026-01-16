@@ -45,7 +45,7 @@ export function useGitHubVisualization(
 
       // Determine max commits based on device
       const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
-      const commitLimit = maxCommits || (isMobile ? 2500 : 10000)
+      const commitLimit = maxCommits || (isMobile ? 2500 : 5000)
 
       try {
         // Stage 0: Fetch repository metadata

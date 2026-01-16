@@ -79,14 +79,14 @@ export class GitHubClient {
    * @param repo Repository name
    * @param branch Optional branch name
    * @param onProgress Optional callback for progress updates
-   * @param maxCommits Maximum number of commits to fetch (default: 10000 for performance)
+   * @param maxCommits Maximum number of commits to fetch (default: 5000 for performance)
    */
   async getAllCommits(
     owner: string,
     repo: string,
     branch?: string,
     onProgress?: (progress: FetchProgress) => void,
-    maxCommits: number = 10000
+    maxCommits: number = 5000
   ): Promise<GitHubCommit[]> {
     const allCommits: GitHubCommit[] = []
     let page = 1

@@ -204,7 +204,7 @@ All panels use:
 
 1. **Fetching** (`lib/github-client.ts`):
    - `getRepo()` - Repository metadata (name, stars, forks, language, topics, size, etc.)
-   - `getAllCommits()` - Paginated commits (max 10k desktop / 2.5k mobile)
+   - `getAllCommits()` - Paginated commits (max 5k desktop / 2.5k mobile)
    - `getBranches()` - Branch information
    - `getContributors()` - Contributor data
    - Progress tracking via callbacks
@@ -241,7 +241,7 @@ All panels use:
 
 ## Performance Optimizations
 
-**Desktop (Max 10,000 commits):**
+**Desktop (Max 5,000 commits):**
 - Full data visualization
 - All panels with smooth animations
 - 60 FPS target
@@ -295,7 +295,7 @@ All panels use:
 ### Test Repositories
 - Small: `facebook/react` (~500-1k commits)
 - Medium: `microsoft/vscode` (~5k commits)
-- Large: `torvalds/linux` (10k+ commits, will be limited)
+- Large: `torvalds/linux` (5k+ commits, will be limited)
 
 ## Removed Components
 
@@ -312,7 +312,7 @@ The following 3D visualization components have been **removed** (replaced by das
 
 ## Known Limitations
 
-1. **Commit Limit:** 10k desktop / 2.5k mobile for performance
+1. **Commit Limit:** 5k desktop / 2.5k mobile for performance
 2. **Branch Detection:** Simplified (no full git graph traversal)
 3. **OAuth:** Setup ready but requires GitHub app configuration
 4. **Private Repos:** Requires OAuth implementation
@@ -383,7 +383,7 @@ GITHUB_CLIENT_SECRET=your_client_secret
 
 ✅ **Landing page:** <2s First Contentful Paint
 ✅ **Small repo (<1k commits):** <5s to render
-✅ **Large repo (10k commits):** <15s with progressive loading
+✅ **Large repo (5k commits):** <15s with progressive loading
 ✅ **Frame rate:** 60 FPS desktop, 30 FPS mobile
 ✅ **Bundle size:** <300KB initial JS (gzipped)
 
