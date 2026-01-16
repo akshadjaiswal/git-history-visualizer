@@ -6,18 +6,25 @@ export function Footer() {
           Built with Next.js, Three.js, and love for open source
         </p>
         <div className="flex justify-center gap-6 text-sm font-body">
-          <a href="https://github.com" className="hover:underline transition-none">
+          <a
+            href="https://github.com/akshadjaiswal/git-history-visualizer"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline transition-none"
+          >
             GitHub
           </a>
-          <a href="#" className="hover:underline transition-none">
+          <a
+            href="https://github.com/akshadjaiswal/git-history-visualizer#readme"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline transition-none"
+          >
             Documentation
-          </a>
-          <a href="#" className="hover:underline transition-none">
-            About
           </a>
         </div>
         <p className="text-xs text-gray-400 mt-8 font-body">
-          © {new Date().getFullYear()} Git History Visualizer. All rights reserved.
+          © 2025 Git History Visualizer. All rights reserved.
         </p>
       </div>
     </footer>
