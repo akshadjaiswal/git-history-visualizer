@@ -11,6 +11,8 @@ import { CommitFlow } from '@/components/visualizer/commit-flow'
 import { TimelineMilestones } from '@/components/visualizer/timeline-milestones'
 import { BranchOverview } from '@/components/visualizer/branch-overview'
 import { ErrorBoundary } from '@/components/error-boundary'
+import { ExportModal } from '@/components/visualizer/export-modal'
+import { exportDashboardToPNG } from '@/lib/export-scene'
 
 function VisualizerContent() {
   const searchParams = useSearchParams()
@@ -185,7 +187,7 @@ function VisualizerContent() {
   if (!data) return null
 
   return (
-    <div className="min-h-screen bg-black text-white pt-16">
+    <div className="min-h-screen bg-black text-white pt-16 visualizer-dashboard">
       {/* Top Bar */}
       <TopBar owner={owner} repo={repo} />
 
@@ -220,6 +222,13 @@ function VisualizerContent() {
           </div>
         </div>
       </div>
+
+      {/* Export Modal */}
+      <ExportModal onExport={(format, resolution) => {
+        if (format === 'png') {
+          exportDashboardToPNG(resolution)
+        }
+      }} />
     </div>
   )
 }

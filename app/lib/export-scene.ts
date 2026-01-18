@@ -1,54 +1,52 @@
+import html2canvas from 'html2canvas'
+
 /**
- * Export the current 3D scene as a PNG image
- * Note: This captures the canvas element directly
+ * Export the current dashboard as a PNG image
+ * Captures the entire visualizer page including top bar and all panels
  */
-export async function exportSceneToPNG(resolution: number = 2): Promise<void> {
+export async function exportDashboardToPNG(resolution: number = 2): Promise<void> {
   try {
-    // Find the canvas element
-    const canvas = document.querySelector('canvas')
-    if (!canvas) {
-      throw new Error('Canvas not found')
+    // Find the dashboard container (main element with all panels)
+    const dashboard = document.querySelector('.visualizer-dashboard')
+    if (!dashboard || !(dashboard instanceof HTMLElement)) {
+      throw new Error('Dashboard not found')
     }
 
-    // Create a temporary canvas with higher resolution
-    const tempCanvas = document.createElement('canvas')
-    const ctx = tempCanvas.getContext('2d')
-    if (!ctx) {
-      throw new Error('Could not get canvas context')
-    }
-
-    // Set dimensions
-    tempCanvas.width = canvas.width * resolution
-    tempCanvas.height = canvas.height * resolution
-
-    // Draw the original canvas scaled up
-    ctx.scale(resolution, resolution)
-    ctx.drawImage(canvas, 0, 0)
+    // Capture with html2canvas
+    const canvas = await html2canvas(dashboard, {
+      scale: resolution, // 1x, 2x, or 4x
+      backgroundColor: '#000000', // Match dashboard black bg
+      logging: false,
+      useCORS: true, // Allow external images if any
+      windowWidth: dashboard.scrollWidth,
+      windowHeight: dashboard.scrollHeight,
+    })
 
     // Convert to blob and download
-    tempCanvas.toBlob((blob) => {
+    canvas.toBlob((blob) => {
       if (!blob) {
         throw new Error('Failed to create image blob')
       }
 
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
-      link.download = `git-visualization-${Date.now()}.png`
+      const timestamp = new Date().toISOString().split('T')[0] // YYYY-MM-DD
+      link.download = `git-dashboard-${timestamp}.png`
       link.href = url
       link.click()
 
       // Cleanup
       URL.revokeObjectURL(url)
-    }, 'image/png')
+    }, 'image/png', 0.95) // 95% quality
   } catch (error) {
     console.error('Export failed:', error)
-    alert('Failed to export image. Please try again.')
+    alert('Failed to export dashboard. Please try again.')
   }
 }
 
 /**
  * Export as SVG (placeholder for future implementation)
  */
-export async function exportSceneToSVG(): Promise<void> {
+export async function exportDashboardToSVG(): Promise<void> {
   alert('SVG export coming soon! For now, please use PNG format.')
 }
