@@ -18,8 +18,13 @@ export function ExportModal({ onExport }: ExportModalProps) {
   const [resolution, setResolution] = useState(2)
 
   const handleExport = () => {
-    onExport(format, resolution)
+    // Close modal FIRST to prevent it from appearing in screenshot
     setShowExportModal(false)
+
+    // Wait for modal close animation (300ms from framer-motion) to complete
+    setTimeout(() => {
+      onExport(format, resolution)
+    }, 350)
   }
 
   return (
@@ -45,10 +50,10 @@ export function ExportModal({ onExport }: ExportModalProps) {
             <div className="bg-white border-4 border-black p-8 max-w-md w-full">
               {/* Header */}
               <div className="flex justify-between items-start mb-6">
-                <h2 className="font-display text-3xl font-semibold">Export</h2>
+                <h2 className="font-display text-3xl font-semibold text-black">Export</h2>
                 <button
                   onClick={() => setShowExportModal(false)}
-                  className="p-2 hover:bg-black hover:text-white transition-colors duration-fast"
+                  className="p-2 hover:bg-black hover:text-white transition-colors duration-fast text-black"
                   aria-label="Close modal"
                 >
                   <X className="w-5 h-5" />
@@ -57,14 +62,14 @@ export function ExportModal({ onExport }: ExportModalProps) {
 
               {/* Format Selection */}
               <div className="mb-6">
-                <label className="block text-sm font-mono uppercase text-gray-500 mb-3">
+                <label className="block text-sm font-mono uppercase text-gray-700 mb-3">
                   Format
                 </label>
                 <div className="flex gap-4">
                   <button
                     onClick={() => setFormat('png')}
                     className={`flex-1 border-2 border-black p-4 transition-colors duration-fast font-body ${
-                      format === 'png' ? 'bg-black text-white' : 'hover:bg-gray-100'
+                      format === 'png' ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'
                     }`}
                   >
                     PNG
@@ -72,7 +77,7 @@ export function ExportModal({ onExport }: ExportModalProps) {
                   <button
                     onClick={() => setFormat('svg')}
                     className={`flex-1 border-2 border-black p-4 transition-colors duration-fast font-body ${
-                      format === 'svg' ? 'bg-black text-white' : 'hover:bg-gray-100'
+                      format === 'svg' ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'
                     }`}
                   >
                     SVG
@@ -83,25 +88,25 @@ export function ExportModal({ onExport }: ExportModalProps) {
               {/* Resolution */}
               {format === 'png' && (
                 <div className="mb-6">
-                  <label className="block text-sm font-mono uppercase text-gray-500 mb-3">
+                  <label className="block text-sm font-mono uppercase text-gray-700 mb-3">
                     Resolution
                   </label>
                   <select
                     value={resolution}
                     onChange={(e) => setResolution(Number(e.target.value))}
-                    className="w-full border-b-2 border-black p-3 bg-transparent font-body focus-visible:border-b-4 focus-visible:outline-none"
+                    className="w-full border-2 border-black p-3 bg-white text-black font-body focus-visible:border-4 focus-visible:outline-none"
                   >
-                    <option value={1}>1x (Standard)</option>
-                    <option value={2}>2x (High)</option>
-                    <option value={4}>4x (Ultra)</option>
+                    <option value={1} className="bg-white text-black">1x (Standard)</option>
+                    <option value={2} className="bg-white text-black">2x (High)</option>
+                    <option value={4} className="bg-white text-black">4x (Ultra)</option>
                   </select>
                 </div>
               )}
 
               {/* SVG Notice */}
               {format === 'svg' && (
-                <div className="mb-6 p-4 border-2 border-gray-300">
-                  <p className="text-sm text-gray-600 font-body">
+                <div className="mb-6 p-4 border-2 border-gray-300 bg-gray-50">
+                  <p className="text-sm text-gray-700 font-body">
                     SVG export is coming soon. For now, please use PNG format.
                   </p>
                 </div>

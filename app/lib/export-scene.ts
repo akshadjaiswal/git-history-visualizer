@@ -18,6 +18,9 @@ export async function exportDashboardToPNG(resolution: number = 2): Promise<void
       backgroundColor: '#000000', // Match dashboard black bg
       logging: false,
       useCORS: true, // Allow external images if any
+      allowTaint: true, // Allow cross-origin images
+      foreignObjectRendering: true, // Better SVG support
+      imageTimeout: 0, // Don't timeout on images
       windowWidth: dashboard.scrollWidth,
       windowHeight: dashboard.scrollHeight,
     })
