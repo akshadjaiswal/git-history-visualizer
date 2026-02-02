@@ -68,7 +68,7 @@ export function CommitIntelligence({ commits, insights }: CommitIntelligenceProp
   return (
     <div className="h-auto border-2 border-white bg-black overflow-hidden">
       {/* Header */}
-      <div className="p-4 border-b-2 border-white">
+      <div className="p-3 border-b-2 border-white">
         <h2 className="font-display text-2xl font-bold">Commit Intelligence</h2>
         <p className="font-mono text-sm text-gray-400 mt-1">
           {commits.length.toLocaleString()} commits analyzed
@@ -76,10 +76,10 @@ export function CommitIntelligence({ commits, insights }: CommitIntelligenceProp
       </div>
 
       {/* Timeline Chart */}
-      <div className="p-4 relative h-[200px]">
+      <div className="p-3 relative h-[160px]">
         <svg
           className="w-full h-full"
-          viewBox="0 0 1000 300"
+          viewBox="0 0 1000 320"
           preserveAspectRatio="none"
         >
           {/* Gradient definition */}
@@ -166,7 +166,7 @@ export function CommitIntelligence({ commits, insights }: CommitIntelligenceProp
         </svg>
 
         {/* Month labels */}
-        <div className="absolute bottom-0 left-4 right-4 h-8 pointer-events-none">
+        <div className="absolute bottom-0 left-4 right-4 h-10 pointer-events-none">
           {monthlyData.filter((_, i) => i % 3 === 0).map((data, idx) => {
             const originalIndex = idx * 3
             const x = (originalIndex / Math.max(monthlyData.length - 1, 1)) * 100

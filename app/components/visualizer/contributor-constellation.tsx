@@ -41,7 +41,7 @@ export function ContributorConstellation({ contributors, commits }: ContributorC
   }, [topContributors])
 
   return (
-    <div className="h-auto min-h-[280px] border-2 border-white bg-black p-4 overflow-visible">
+    <div className="h-auto min-h-[180px] border-2 border-white bg-black p-4 overflow-visible">
       <h2 className="font-display text-xl font-bold mb-4 border-b-2 border-white pb-2">
         Top Contributors
       </h2>

@@ -31,11 +31,11 @@ export function MessageQuality({ data }: MessageQualityProps) {
 
   return (
     <div
-      className="border-r-2 md:border-r-2 border-b-0 md:border-b-0 border-white p-3 bg-black hover:bg-gray-900 transition-colors duration-200 cursor-pointer min-h-[140px]"
+      className="border-r-2 md:border-r-2 border-b-0 md:border-b-0 border-white p-3 bg-black hover:bg-gray-900 transition-colors duration-200 cursor-pointer min-h-[90px]"
       onMouseEnter={() => setShowDetails(true)}
       onMouseLeave={() => setShowDetails(false)}
     >
-      <h3 className="font-mono text-xs text-gray-400 mb-3">MESSAGE QUALITY</h3>
+      <h3 className="font-mono text-xs text-gray-400 mb-2">MESSAGE QUALITY</h3>
 
       <div className="space-y-3">
         {/* Score gauge */}

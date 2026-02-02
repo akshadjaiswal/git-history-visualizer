@@ -15,8 +15,8 @@ export function VelocityTrend({ data }: VelocityTrendProps) {
 
   if (data.length === 0) {
     return (
-      <div className="border-r-0 md:border-r-0 border-b-0 md:border-b-0 border-white p-3 bg-black min-h-[140px]">
-        <h3 className="font-mono text-xs text-gray-400 mb-3">VELOCITY TREND</h3>
+      <div className="border-r-0 md:border-r-0 border-b-0 md:border-b-0 border-white p-3 bg-black min-h-[90px]">
+        <h3 className="font-mono text-xs text-gray-400 mb-2">VELOCITY TREND</h3>
         <div className="flex items-center justify-center h-20 text-gray-600 font-mono text-xs">
           No recent activity
         </div>
@@ -53,8 +53,8 @@ export function VelocityTrend({ data }: VelocityTrendProps) {
   }
 
   return (
-    <div className="border-r-0 md:border-r-0 border-b-0 md:border-b-0 border-white p-3 bg-black hover:bg-gray-900 transition-colors duration-200 min-h-[140px]">
-      <h3 className="font-mono text-xs text-gray-400 mb-3">VELOCITY TREND</h3>
+    <div className="border-r-0 md:border-r-0 border-b-0 md:border-b-0 border-white p-3 bg-black hover:bg-gray-900 transition-colors duration-200 min-h-[90px]">
+      <h3 className="font-mono text-xs text-gray-400 mb-2">VELOCITY TREND</h3>
 
       <div className="relative">
         <svg viewBox="0 0 100 60" className="w-full h-auto">

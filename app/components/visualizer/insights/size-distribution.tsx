@@ -25,8 +25,8 @@ export function SizeDistribution({ data, totalCommits }: SizeDistributionProps) 
   const maxCount = Math.max(...categories.map(c => c.count), 1)
 
   return (
-    <div className="border-r-2 md:border-r-2 border-b-2 border-white p-3 bg-black hover:bg-gray-900 transition-colors duration-200 min-h-[140px]">
-      <h3 className="font-mono text-xs text-gray-400 mb-3">COMMIT SIZE</h3>
+    <div className="border-r-2 md:border-r-2 border-b-2 border-white p-3 bg-black hover:bg-gray-900 transition-colors duration-200 min-h-[90px]">
+      <h3 className="font-mono text-xs text-gray-400 mb-2">COMMIT SIZE</h3>
 
       <div className="space-y-2">
         {categories.map(cat => {

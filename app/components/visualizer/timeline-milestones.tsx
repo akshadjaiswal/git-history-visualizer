@@ -39,7 +39,7 @@ export function TimelineMilestones({ commits, timeRange }: TimelineMilestonesPro
   }, [commits, timeRange])
 
   return (
-    <div className="h-auto min-h-[280px] border-2 border-white bg-black p-4 overflow-auto">
+    <div className="h-auto min-h-[200px] border-2 border-white bg-black p-4 overflow-auto">
       <h2 className="font-display text-xl font-bold mb-4 border-b-2 border-white pb-2">
         Timeline
       </h2>

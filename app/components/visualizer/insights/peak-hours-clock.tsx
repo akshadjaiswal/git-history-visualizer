@@ -37,8 +37,8 @@ export function PeakHoursClock({ data }: PeakHoursClockProps) {
   const innerRadius = 20
 
   return (
-    <div className="border-r-0 md:border-r-0 border-b-2 border-white p-3 bg-black hover:bg-gray-900 transition-colors duration-200 min-h-[140px]">
-      <h3 className="font-mono text-xs text-gray-400 mb-3">PEAK HOURS</h3>
+    <div className="border-r-0 md:border-r-0 border-b-2 border-white p-3 bg-black hover:bg-gray-900 transition-colors duration-200 min-h-[90px]">
+      <h3 className="font-mono text-xs text-gray-400 mb-2">PEAK HOURS</h3>
 
       <div className="relative">
         <svg viewBox="0 0 100 100" className="w-full h-auto">

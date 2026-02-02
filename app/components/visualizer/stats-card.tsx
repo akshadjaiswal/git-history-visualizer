@@ -9,7 +9,7 @@ interface StatsCardProps {
 
 export function StatsCard({ data, contributors }: StatsCardProps) {
   return (
-    <div className="h-auto min-h-[280px] border-2 border-white bg-black p-4 overflow-auto hover:border-[#5EEAD4] transition-colors duration-200" style={{ borderTop: '4px solid #5EEAD4' }}>
+    <div className="h-auto min-h-[180px] border-2 border-white bg-black p-4 overflow-auto hover:border-[#5EEAD4] transition-colors duration-200" style={{ borderTop: '4px solid #5EEAD4' }}>
       <h2 className="font-display text-xl font-bold mb-4 border-b-2 border-white pb-2">
         Repository Stats
       </h2>
