@@ -7,7 +7,7 @@ import { TopBar } from '@/components/visualizer/top-bar'
 import { StatsCard } from '@/components/visualizer/stats-card'
 import { ContributorConstellation } from '@/components/visualizer/contributor-constellation'
 import { ActivityHeatmap } from '@/components/visualizer/activity-heatmap'
-import { CommitFlow } from '@/components/visualizer/commit-flow'
+import { CommitIntelligence } from '@/components/visualizer/commit-intelligence'
 import { TimelineMilestones } from '@/components/visualizer/timeline-milestones'
 import { BranchOverview } from '@/components/visualizer/branch-overview'
 import { ErrorBoundary } from '@/components/error-boundary'
@@ -191,34 +191,35 @@ function VisualizerContent() {
       {/* Top Bar */}
       <TopBar owner={owner} repo={repo} />
 
-      {/* Dashboard Grid - Flexible rows */}
-      <div className="px-2 md:px-4 py-3 md:py-4 space-y-3 md:space-y-4">
-        {/* Row 1: Top panels */}
+      {/* Dashboard Grid - Stacked columns layout */}
+      <div className="px-2 md:px-4 py-2 md:py-2 space-y-2 md:space-y-2">
+        {/* Row 1: Three columns with stacked content */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4">
-          <div className="col-span-full md:col-span-3">
+          {/* Left Column: Stats + Timeline */}
+          <div className="col-span-full md:col-span-3 flex flex-col gap-2 md:gap-4">
             <StatsCard data={data.repoMetadata} contributors={data.contributors.size} />
+            <TimelineMilestones commits={data.commits} timeRange={data.timeRange} />
           </div>
+
+          {/* Center Column: Commit Intelligence */}
           <div className="col-span-full md:col-span-6">
-            <CommitFlow commits={data.commits} />
+            <CommitIntelligence commits={data.commits} insights={data.insights} />
           </div>
-          <div className="col-span-full md:col-span-3">
+
+          {/* Right Column: Contributors + Branches */}
+          <div className="col-span-full md:col-span-3 flex flex-col gap-2 md:gap-4">
             <ContributorConstellation
               contributors={Array.from(data.contributors.entries())}
               commits={data.commits}
             />
+            <BranchOverview branches={data.branches} commits={data.commits} />
           </div>
         </div>
 
-        {/* Row 2: Bottom panels */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4">
-          <div className="col-span-full md:col-span-3">
-            <TimelineMilestones commits={data.commits} timeRange={data.timeRange} />
-          </div>
-          <div className="col-span-full md:col-span-6">
+        {/* Row 2: Full-width Heatmap */}
+        <div className="grid grid-cols-1">
+          <div className="col-span-full">
             <ActivityHeatmap commits={data.commits} timeRange={data.timeRange} />
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <BranchOverview branches={data.branches} commits={data.commits} />
           </div>
         </div>
       </div>

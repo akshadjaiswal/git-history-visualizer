@@ -1,4 +1,4 @@
-import type { GitHubCommit, GitHubBranch, GitHubContributor, GitHubRepo, CommitNode, BranchLine, VisualizationData } from '@/types/github'
+import type { GitHubCommit, GitHubBranch, GitHubContributor, GitHubRepo, CommitNode, BranchLine, VisualizationData, CommitInsights } from '@/types/github'
 
 /**
  * Process GitHub API data into 3D visualization data
@@ -46,6 +46,7 @@ export function processGitData(
         totalBranches: 0,
       },
       repoMetadata,
+      insights: calculateCommitInsights([]),
     }
   }
 
@@ -141,6 +142,95 @@ export function processGitData(
       totalBranches: branches.length,
     },
     repoMetadata,
+    insights: calculateCommitInsights(commitNodes),
+  }
+}
+
+/**
+ * Calculate commit insights for analytics dashboard
+ */
+export function calculateCommitInsights(commits: CommitNode[]): CommitInsights {
+  if (commits.length === 0) {
+    return {
+      sizeDistribution: { small: 0, medium: 0, large: 0, huge: 0 },
+      peakHours: [],
+      messageQuality: {
+        score: 0,
+        conventionalCount: 0,
+        shortCount: 0,
+        averageLength: 0,
+      },
+      velocityTrend: [],
+    }
+  }
+
+  // 1. Size distribution
+  const sizeDistribution = { small: 0, medium: 0, large: 0, huge: 0 }
+  commits.forEach(commit => {
+    const total = commit.stats?.total || 0
+    if (total <= 50) sizeDistribution.small++
+    else if (total <= 200) sizeDistribution.medium++
+    else if (total <= 500) sizeDistribution.large++
+    else sizeDistribution.huge++
+  })
+
+  // 2. Peak hours
+  const hourCounts = new Map<number, number>()
+  commits.forEach(commit => {
+    const hour = commit.date.getHours()
+    hourCounts.set(hour, (hourCounts.get(hour) || 0) + 1)
+  })
+  const peakHours = Array.from(hourCounts.entries())
+    .map(([hour, count]) => ({ hour, count }))
+    .sort((a, b) => b.count - a.count)
+
+  // 3. Message quality
+  const conventionalPatterns = /^(feat|fix|docs|style|refactor|test|chore|perf)(\(.*\))?:/
+  let conventionalCount = 0
+  let shortCount = 0
+  let totalLength = 0
+
+  commits.forEach(commit => {
+    const message = commit.message.split('\n')[0]
+    if (conventionalPatterns.test(message)) conventionalCount++
+    if (message.length < 10) shortCount++
+    totalLength += message.length
+  })
+
+  const conventionalPercent = (conventionalCount / commits.length) * 100
+  const shortPercent = (shortCount / commits.length) * 100
+  const score = Math.min(100, Math.max(0,
+    conventionalPercent * 0.8 + (100 - shortPercent) * 0.2
+  ))
+
+  // 4. Velocity trend (last 12 weeks)
+  const now = commits[commits.length - 1]?.date || new Date()
+  const twelveWeeksAgo = new Date(now.getTime() - 12 * 7 * 24 * 60 * 60 * 1000)
+
+  const weeklyCommits = new Map<string, number>()
+  commits.forEach(commit => {
+    if (commit.date >= twelveWeeksAgo) {
+      const weekStart = new Date(commit.date)
+      weekStart.setDate(commit.date.getDate() - commit.date.getDay())
+      const weekKey = weekStart.toISOString().split('T')[0]
+      weeklyCommits.set(weekKey, (weeklyCommits.get(weekKey) || 0) + 1)
+    }
+  })
+
+  const velocityTrend = Array.from(weeklyCommits.entries())
+    .map(([week, count]) => ({ week: new Date(week), count }))
+    .sort((a, b) => a.week.getTime() - b.week.getTime())
+
+  return {
+    sizeDistribution,
+    peakHours,
+    messageQuality: {
+      score,
+      conventionalCount,
+      shortCount,
+      averageLength: totalLength / commits.length,
+    },
+    velocityTrend,
   }
 }
 
