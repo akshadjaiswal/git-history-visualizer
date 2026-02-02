@@ -7,7 +7,7 @@ import { TopBar } from '@/components/visualizer/top-bar'
 import { StatsCard } from '@/components/visualizer/stats-card'
 import { ContributorConstellation } from '@/components/visualizer/contributor-constellation'
 import { ActivityHeatmap } from '@/components/visualizer/activity-heatmap'
-import { CommitFlow } from '@/components/visualizer/commit-flow'
+import { CommitIntelligence } from '@/components/visualizer/commit-intelligence'
 import { TimelineMilestones } from '@/components/visualizer/timeline-milestones'
 import { BranchOverview } from '@/components/visualizer/branch-overview'
 import { ErrorBoundary } from '@/components/error-boundary'
@@ -199,7 +199,7 @@ function VisualizerContent() {
             <StatsCard data={data.repoMetadata} contributors={data.contributors.size} />
           </div>
           <div className="col-span-full md:col-span-6">
-            <CommitFlow commits={data.commits} />
+            <CommitIntelligence commits={data.commits} insights={data.insights} />
           </div>
           <div className="col-span-full md:col-span-3">
             <ContributorConstellation
