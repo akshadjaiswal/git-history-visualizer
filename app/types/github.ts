@@ -92,6 +92,7 @@ export interface VisualizationData {
     totalBranches: number
   }
   repoMetadata: GitHubRepo
+  insights: CommitInsights
 }
 
 // Progress tracking for data fetching
@@ -109,3 +110,30 @@ export type FetchStage =
   | 'processing_data'
   | 'rendering'
   | 'complete'
+
+// Commit insights for analytics
+export interface CommitInsights {
+  sizeDistribution: {
+    small: number    // 0-50 lines
+    medium: number   // 51-200 lines
+    large: number    // 201-500 lines
+    huge: number     // 500+ lines
+  }
+
+  peakHours: {
+    hour: number     // 0-23
+    count: number
+  }[]
+
+  messageQuality: {
+    score: number              // 0-100
+    conventionalCount: number
+    shortCount: number         // <10 chars
+    averageLength: number
+  }
+
+  velocityTrend: {
+    week: Date
+    count: number
+  }[]
+}
