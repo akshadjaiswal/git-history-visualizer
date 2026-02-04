@@ -10,9 +10,10 @@
 
 ## Latest Highlights
 
+- **Commit Intelligence Analytics** – Advanced insights with 4 metrics: size distribution, peak hours, message quality, velocity trend
 - **SVG Line/Area Chart** – Smooth, professional commit activity visualization with gradient fills
 - **Pastel Color Scheme** – Beautiful mint, sky, coral, lavender, teal, and peach palette
-- **6 Visualization Panels** – Repository stats, commit flow, heatmap, contributors, timeline, branches
+- **6 Visualization Panels** – Repository stats, commit intelligence, heatmap, contributors, timeline, branches
 - **Optimized Layout** – Content-driven heights with smooth scrolling for large datasets
 - **Real-time Data** – Live GitHub API integration with progressive loading (5 stages)
 - **Mobile Optimized** – Responsive design with adaptive commit limits for performance
@@ -28,11 +29,14 @@
 - **Language Badge** – Gradient-filled badge showing primary programming language
 - **Repository Size & Last Updated** – Essential metadata at a glance
 
-#### Commit Activity
-- **SVG Line/Area Chart** – Smooth monthly commit trends with gradient area fill
+#### Commit Intelligence
+- **Monthly Timeline Chart** – SVG line/area chart showing commit trends with gradient fill
 - **Timeline Color Coding** – Mint (early) → Sky (middle) → Lavender (recent)
 - **Interactive Data Points** – Hover to see month, commit count, and contributor count
-- **Recent Commits Stream** – Last 10 commits with author and message
+- **Size Distribution** – Categorizes commits by lines changed (Small/Medium/Large/Huge)
+- **Peak Hours Clock** – 24-hour radial heatmap revealing when commits happen
+- **Message Quality Score** – 0-100 rating based on conventional commits and message length
+- **Velocity Trend** – Last 12 weeks sparkline showing development momentum
 
 #### Activity Heatmap
 - **GitHub-Style Calendar** – Last 52 weeks of contribution activity
@@ -92,11 +96,50 @@
 | Panel | What It Shows |
 |-------|---------------|
 | **Repository Stats** | Stars, forks, contributors, language, size, last updated |
-| **Commit Activity** | Monthly commit trends with SVG line chart and gradient fill |
+| **Commit Intelligence** | Monthly trends + 4 analytics: size distribution, peak hours, message quality, velocity |
 | **Activity Heatmap** | GitHub-style contribution calendar (last 52 weeks) |
 | **Top Contributors** | Top 10 contributors in circular pattern with pastel colors |
 | **Timeline** | First commit, most active period, and latest commit dates |
 | **Branches** | All branches with commit distribution and last activity |
+
+### Commit Intelligence Analytics
+
+The **Commit Intelligence** panel provides deep insights into repository development patterns through four analytical metrics:
+
+#### 📊 Size Distribution
+Categorizes commits by the number of lines changed, revealing code complexity patterns:
+- **Small (0-50 lines)** – Mint green: Quick fixes, minor tweaks
+- **Medium (51-200 lines)** – Sky blue: Feature additions, moderate changes
+- **Large (201-500 lines)** – Coral pink: Significant refactors, major features
+- **Huge (500+ lines)** – Lavender: Architecture changes, massive updates
+
+*Insight:* Healthy repositories typically show a majority of small-to-medium commits, indicating incremental development practices.
+
+#### ⏰ Peak Hours Clock
+A 24-hour radial heatmap showing when commits occur throughout the day:
+- Visualizes developer timezone and working patterns
+- Teal gradient intensity from dark (low activity) to mint green (high activity)
+- Hour markers at 0, 6, 12, and 18 for easy reference
+
+*Insight:* Reveals team time zones, work-life balance patterns, and peak productivity hours.
+
+#### ✍️ Message Quality Score
+Measures commit message hygiene on a 0-100 scale:
+- **Excellent (71-100)** – Mint green: Strong conventional commit usage
+- **Good (41-70)** – Peach: Decent messages with room for improvement
+- **Poor (0-40)** – Coral: Needs better commit message standards
+
+*Score calculation:* 80% weight on conventional commits (feat:, fix:, etc.), 20% weight on message length (>10 characters).
+
+*Insight:* Higher scores indicate better documentation practices and team standards.
+
+#### 📈 Velocity Trend
+A sparkline showing commits per week over the last 12 weeks:
+- Lavender line with gradient fill
+- Highlights minimum (coral) and maximum (mint) activity weeks
+- Shows project momentum: accelerating, steady, or declining
+
+*Insight:* Tracks development pace and can reveal sprint patterns, release cycles, or project momentum shifts.
 
 ---
 
@@ -107,6 +150,7 @@
 - **Next.js 16 App Router** with React 19 for modern web development
 - **TypeScript Strict Mode** for type safety and better developer experience
 - **Client-Side Data Fetching** with TanStack Query v5 for efficient caching
+- **Advanced Commit Analytics** – 4-metric insight grid with size, timing, quality, and velocity analysis
 - **Progressive Loading** – 5-stage progress tracking for better UX
 - **Error Boundaries** – Graceful failure handling with retry mechanisms
 
@@ -173,7 +217,12 @@ git-history-visualizer/
 │   │   ├── visualizer/              # Dashboard panels
 │   │   │   ├── top-bar.tsx          # Repo name + export button
 │   │   │   ├── stats-card.tsx       # Repository metrics
-│   │   │   ├── commit-flow.tsx      # SVG line/area chart
+│   │   │   ├── commit-intelligence.tsx  # Analytics panel with 4 insights
+│   │   │   ├── insights/            # Analytics components
+│   │   │   │   ├── size-distribution.tsx
+│   │   │   │   ├── peak-hours-clock.tsx
+│   │   │   │   ├── message-quality.tsx
+│   │   │   │   └── velocity-trend.tsx
 │   │   │   ├── activity-heatmap.tsx # GitHub-style calendar
 │   │   │   ├── contributor-constellation.tsx  # Top 10 circles
 │   │   │   ├── timeline-milestones.tsx        # Key dates
